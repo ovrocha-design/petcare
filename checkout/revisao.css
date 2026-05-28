@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #F9FAFB;
+}
+
+/* ── Cabeçalho ── */
+.topo {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.topo-conteudo {
+    width: 90%;
+    max-width: 970px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topo-conteudo h2 {
+    font-size: 20px;
+    color: #111827;
+}
+
+.topo-conteudo p {
+    font-size: 14px;
+    color: #4B5563;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    background: linear-gradient(to right, #3B82F6, #4ADE80);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ── Passos ── */
+.passos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fafc;
+    border-bottom: 1px solid #edf2f7;
+    width: 100%;
+    padding: 15px 0;
+    margin: 0 0 30px 0;
+}
+
+.passo {
+    text-align: center;
+    color: #8a94a6;
+}
+
+.passo span {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e9ecf0;
+    color: #4e5d78;
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 8px;
+}
+
+.passo p {
+    font-size: 13px;
+}
+
+.passo.concluido span {
+    background: #4ADE80;
+    color: white;
+}
+
+.passo.concluido {
+    color: #4ADE80;
+    font-weight: bold;
+}
+
+.passo.ativo span {
+    background: #2d8cff;
+    color: white;
+}
+
+.passo.ativo {
+    color: #2d8cff;
+    font-weight: bold;
+}
+
+.linha {
+    width: 80px;
+    height: 2px;
+    background: #ddd;
+    margin: 0 10px;
+    transform: translateY(-13px);
+}
+
+.linha.concluida {
+    background-color: #4ADE80;
+}
+
+/* ── Container principal ── */
+.container-checkout {
+    width: 90%;
+    max-width: 970px;
+    margin: 40px auto 0;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ── Formulário ── */
+.formulario {
+    flex: 6;
+    background: white;
+    padding: 35px 40px;
+    border-radius: 16px;
+    border: 1px solid #ebebeb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.formulario h2 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: #2a2c30;
+    letter-spacing: -0.5px;
+}
+
+/* ── Itens de revisão ── */
+.revisao-itens {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 32px;
+}
+
+.revisao-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.revisao-item i {
+    color: #4ADE80;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.revisao-item strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* ── Botões ── */
+.botoes-fluxo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-voltar:hover {
+    background: #f5f5f5;
+}
+
+.btn-confirmar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #22C55E;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.btn-confirmar:hover {
+    background: #16a34a;
+}
+
+/* ── Resumo ── */
+.resumo {
+    flex: 4;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid #ebebeb;
+    padding: 30px;
+    height: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.resumo h2 {
+    font-size: 20px;
+    color: #0b132b;
+    margin-bottom: 25px;
+}
+
+.linha-resumo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.linha-resumo.total {
+    border-top: 1px solid #eeeeee;
+    margin-top: 20px;
+    padding-top: 20px;
+    color: #0b132b;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.preco-total {
+    color: #2d8cff;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.resumo small {
+    display: block;
+    margin-top: 25px;
+    font-size: 12px;
+    color: #a0a0a0;
+}

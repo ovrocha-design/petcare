@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetCare — Cuidamos do seu melhor amigo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Estilos adicionais para garantir o funcionamento */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .card.product p {
+      font-size: 13px;
+      color: #666;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+ /* CENTRALIZAR 3 CARDS DE SERVIÇOS */
+.services .services-grid {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+.services .services-grid .service-card {
+  flex: 1 1 280px;
+  max-width: 340px;
+}
+@media (max-width: 768px) {
+  .services .services-grid .service-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero" style="background: linear-gradient(to right, #3B82F6, #4ADE80); padding: 40px 0;">
+  <div class="container hero-content">
+    <div class="hero-text">
+      <h1 style="color: white;">Cuidamos do seu melhor amigo com <span style="color: #4ADE80; text-decoration: underline; text-underline-offset: 6px;">carinho</span></h1>
+      <p style="color: rgba(255,255,255,0.85);">Serviços completos para pets com profissionais qualificados e ambiente acolhedor.</p>
+      <div class="hero-buttons">
+        <button class="btn" style="background: white; color: #3B82F6; border-radius: 9999px; padding: 12px 24px; font-weight: 600; border: none; cursor: pointer;" onclick="location.href='agendamento.html'">📅 Agendar agora</button>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-avatars">
+          <div class="proof-avatar">AM</div>
+          <div class="proof-avatar" style="background:#BBF7D0;color:#166534;">LC</div>
+          <div class="proof-avatar" style="background:#BFDBFE;color:#1D4ED8;">RF</div>
+          <div class="proof-avatar">+</div>
+        </div>
+        <div class="proof-text" style="color: white;">
+          <div class="proof-stars" style="color: white;">★★★★★</div>
+          <strong>+500 clientes</strong> satisfeitos · nota 4.9/5
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="images/hero.png" alt="Cachorros felizes">
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="section-header">
+      <h2>Nossos Serviços</h2>
+      <p class="subtitle">Tudo que seu pet precisa, com o carinho que ele merece.</p>
+    </div>
+    <div class="grid services-grid">
+      <div class="service-card">
+        <div class="service-icon" style="background:#EFF6FF;">✂️</div>
+        <h3>Banho e Tosa</h3>
+        <p>Higiene e estética com produtos de qualidade premium para seu pet.</p>
+        <a href="banho.html" class="service-link">Saiba mais →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#F0FDF4;">🩺</div>
+        <h3>Consulta Veterinária</h3>
+        <p>Atendimento com veterinários especializados para a saúde do seu animal.</p>
+        <a href="veterinario.html" class="service-link">Saiba mais →</a>
+      </div>
+      <div class="service-card">
+        <div class="service-icon" style="background:#EFF6FF;">🏠</div>
+        <h3>Hotel para Pets</h3>
+        <p>Hospedagem segura com recreação e cuidados 24 horas por dia.</p>
+        <a href="hotel.html" class="service-link">Saiba mais →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- PRODUTOS EM DESTAQUE -->
+  <section class="products">
+    <div class="container">
+      <div class="section-header">
+        <h2>Produtos em Destaque</h2>
+        <p class="subtitle">Selecionados com critério para o bem-estar do seu pet.</p>
+      </div>
+      <div class="grid products-grid" id="produtos-destaque">
+        <!-- Os produtos serão carregados dinamicamente aqui -->
+      </div>
+      <div class="text-center mt-32">
+        <button class="btn outline" onclick="location.href='produtos/produtos.html'">Ver todos os produtos →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="about" id="sobre">
+    <div class="container about-content">
+      <div class="about-text">
+        <h2>Sobre o PetCare</h2>
+        <p>Fundado em 2015, o PetCare nasceu do amor pelos animais e da vontade de oferecer um atendimento diferenciado
+          e humano.</p>
+        <p>Contamos com uma equipe de profissionais certificados e apaixonados por pets, prontos para cuidar do seu
+          melhor amigo como se fosse o nosso.</p>
+      </div>
+      <div class="about-image">
+        <img src="images/sobre.png" alt="Pessoa com cachorro">
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section class="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <h2>O que nossos clientes dizem</h2>
+      </div>
+      <div class="grid testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"Excelente atendimento! Meu cachorro adora ir ao PetCare. Equipe super carinhosa."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">MS</div>
+            <div class="testimonial-info"><strong>Maria Silva</strong><span>Tutora do Bolinha</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"O hotel para pets é incrível. Minha gata ficou super bem cuidada durante as férias."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#BBF7D0;color:#166534;">JP</div>
+            <div class="testimonial-info"><strong>João Pedro</strong><span>Tutor da Mimi</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p>"Preços justos e qualidade impecável. Recomendo a todos os tutores de pets!"</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background:#BFDBFE;color:#1D4ED8;">AC</div>
+            <div class="testimonial-info"><strong>Ana Costa</strong><span>Tutora do Rex</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="contact" id="contato">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Entre em Contato</h2>
+          <p>Estamos aqui para responder suas dúvidas e ajudar no que precisar.</p>
+          <div class="contact-item"><span>📍</span><span>Rua dos Pets, 123 — São Paulo, SP</span></div>
+          <div class="contact-item"><span>📞</span><span>(11) 9 9999-9999</span></div>
+          <div class="contact-item"><span>✉️</span><span>contato@petcare.com.br</span></div>
+          <div class="contact-item"><span>🕐</span><span>Seg–Sex 8h–18h · Sáb 8h–14h</span></div>
+        </div>
+        <form id="contact-form">
+          <div class="form-group"><input type="text" id="contact-name" placeholder="Seu nome" required></div>
+          <div class="form-group"><input type="email" id="contact-email" placeholder="Seu e-mail" required></div>
+          <div class="form-group"><textarea id="contact-msg" placeholder="Sua mensagem" required></textarea></div>
+          <button type="submit" class="btn primary" style="width:100%;">Enviar mensagem</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/storage.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // ========== FUNÇÃO PARA CARREGAR PRODUTOS EM DESTAQUE ==========
+    function carregarProdutosDestaque() {
+      const container = document.getElementById('produtos-destaque');
+      if (!container) return;
+      
+      // Buscar produtos do localStorage
+      const todosProdutos = Storage.getList('petcare_produtos');
+      
+      // Pega apenas os 3 primeiros produtos
+      const produtosDestaque = todosProdutos.slice(0, 3);
+      
+      // Se não tem produtos, mostra mensagem
+      if (produtosDestaque.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+            <p>⚠️ Nenhum produto encontrado no momento.</p>
+            <button class="btn primary" onclick="location.href='produtos/produtos.html'">Ver produtos</button>
+          </div>
+        `;
+        return;
+      }
+      
+      // Mapeamento de categorias para badges
+      const categoriasMap = {
+        'alimentacao': '🥣 Alimentação',
+        'brinquedos': '🎾 Brinquedos',
+        'acessorios': '🎀 Acessórios',
+        'higiene': '🛁 Higiene',
+        'saude': '💊 Saúde'
+      };
+      
+      // Renderizar os produtos
+      container.innerHTML = produtosDestaque.map(produto => {
+        // Formatar preço
+        const precoFormatado = Number(produto.preco).toFixed(2).replace('.', ',');
+        
+        // Definir imagem (com fallback)
+        const imagemSrc = produto.img || 'images/produto1.png';
+        
+        // Definir badge da categoria
+        const badgeTexto = categoriasMap[produto.cat] || produto.cat || 'Produto';
+        
+        // Descrição resumida
+        const descricaoResumida = produto.descricao ? 
+          `<p style="font-size: 13px; color: #666; margin: 8px 0;">${produto.descricao.substring(0, 50)}${produto.descricao.length > 50 ? '...' : ''}</p>` : '';
+        
+        return `
+          <div class="card product">
+            <img src="${imagemSrc}" alt="${produto.nome}" class="card-img"
+                 onerror="this.src='images/produto1.png'">
+            <div class="card-body">
+              <span class="badge">${badgeTexto}</span>
+              <h3>${produto.nome}</h3>
+              ${descricaoResumida}
+              <div class="price">R$ ${precoFormatado}</div>
+              <button class="btn primary" style="width:100%;" onclick="addCart(${produto.id})">
+                🛒 Comprar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // ========== FUNÇÃO PARA ADICIONAR AO CARRINHO ==========
+    function addCart(id) {
+      // Buscar o produto completo do localStorage
+      const todosProdutos = Storage.getList('petcare_produtos');
+      const produto = todosProdutos.find(p => p.id === id);
+      
+      if (!produto) {
+        if (typeof mostrarToast === 'function') {
+          mostrarToast('Produto não encontrado!', 'error');
+        } else {
+          alert('Produto não encontrado!');
+        }
+        return;
+      }
+      
+      const carrinho = Storage.getList('petcare_carrinho');
+      const exist = carrinho.find(i => i.id === produto.id);
+      
+      if (exist) {
+        Storage.updateInList('petcare_carrinho', exist.id, { qtd: (exist.qtd || 1) + 1 });
+      } else {
+        Storage.addToList('petcare_carrinho', { 
+          id: produto.id,
+          nome: produto.nome,
+          preco: produto.preco,
+          img: produto.img,
+          qtd: 1 
+        });
+      }
+      
+      // Atualizar badge do carrinho se a função existir
+      if (typeof updateCartBadge === 'function') {
+        updateCartBadge();
+      }
+      
+      // Mostrar mensagem de sucesso
+      if (typeof mostrarToast === 'function') {
+        mostrarToast(`✅ ${produto.nome} adicionado ao carrinho!`, 'success');
+      } else {
+        alert(`✅ ${produto.nome} adicionado ao carrinho!`);
+      }
+    }
+    
+    // ========== FORMULÁRIO DE CONTATO ==========
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const nome = document.getElementById('contact-name')?.value || '';
+        const email = document.getElementById('contact-email')?.value || '';
+        const mensagem = document.getElementById('contact-msg')?.value || '';
+        
+        if (nome && email && mensagem) {
+          Storage.addToList('petcare_contatos', {
+            nome: nome,
+            email: email,
+            mensagem: mensagem,
+            data: new Date().toLocaleString('pt-BR')
+          });
+          
+          if (typeof mostrarToast === 'function') {
+            mostrarToast('Mensagem enviada com sucesso!', 'success');
+          } else {
+            alert('Mensagem enviada com sucesso!');
+          }
+          
+          contactForm.reset();
+        }
+      });
+    }
+    
+    // ========== INICIALIZAR ==========
+    // Carregar produtos quando a página terminar de carregar
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarProdutosDestaque();
+    });
+  </script>
+</body>
+
+</html>

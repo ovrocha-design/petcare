@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamento — PetCare</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .agendamentos-list { margin-top: 32px; }
+    .agendamento-item {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .agendamento-info strong { display: block; font-size: 15px; }
+    .agendamento-info span   { font-size: 13px; color: var(--text-light); }
+    .agendamento-actions { display: flex; gap: 8px; }
+    .btn-delete { background: #FEE2E2; color: #DC2626; border: none; padding: 6px 14px; border-radius: var(--radius-pill); font-size: 13px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Agendamento</h1>
+    <p class="subtitle">Agende o serviço ideal para o seu pet.</p>
+  </div>
+</section>
+
+<section class="scheduling">
+  <div class="container">
+    <div class="scheduling-grid">
+
+      <!-- FORMULÁRIO -->
+      <div>
+        <h2 class="mt-8">Novo Agendamento</h2>
+        <p class="subtitle" style="margin-bottom:24px;">Preencha os dados abaixo.</p>
+        <form id="scheduling-form">
+          <div class="form-group">
+            <input type="text" id="tutor-name" placeholder="Nome do tutor" required>
+          </div>
+          <div class="form-group">
+            <input type="text" id="pet-name" placeholder="Nome do pet" required>
+          </div>
+          <div class="form-group">
+            <select id="service">
+              <option value="">Selecione o serviço</option>
+              <option>Banho e Tosa</option>
+              <option>Consulta Veterinária</option>
+              <option>Hotel para Pets</option>
+              <option>Vacinação</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="date" id="date" required>
+          </div>
+          <div class="form-group">
+            <input type="time" id="time" required>
+          </div>
+          <button type="submit" class="btn orange" style="width:100%;">📅 Confirmar Agendamento</button>
+        </form>
+      </div>
+
+      <!-- LISTA -->
+      <div>
+        <h2 class="mt-8">Meus Agendamentos</h2>
+        <p class="subtitle" style="margin-bottom:24px;">Seus agendamentos salvos.</p>
+        <div class="agendamentos-list" id="agendamentos-list">
+          <p style="color:var(--text-light);">Nenhum agendamento ainda.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script src="js/storage.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const KEY = 'petcare_agendamentos';
+
+  function renderList() {
+    const list = Storage.getList(KEY);
+    const el = document.getElementById('agendamentos-list');
+    if (!list.length) {
+      el.innerHTML = '<p style="color:var(--text-light);">Nenhum agendamento ainda.</p>';
+      return;
+    }
+    el.innerHTML = list.map(a => `
+      <div class="agendamento-item">
+        <div class="agendamento-info">
+          <strong>${a.pet} — ${a.servico}</strong>
+          <span>${a.tutor} · ${a.data} às ${a.hora}</span>
+        </div>
+        <div class="agendamento-actions">
+          <button class="btn-delete" onclick="deleteItem(${a.id})">🗑 Excluir</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function deleteItem(id) {
+    if (confirm('Excluir este agendamento?')) {
+      Storage.removeFromList(KEY, id);
+      renderList();
+    }
+  }
+
+  document.getElementById('scheduling-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const item = {
+      tutor:   document.getElementById('tutor-name').value,
+      pet:     document.getElementById('pet-name').value,
+      servico: document.getElementById('service').value,
+      data:    document.getElementById('date').value,
+      hora:    document.getElementById('time').value,
+    };
+    if (!item.servico) return alert('Selecione um serviço.');
+    Storage.addToList(KEY, item);
+    alert('Agendamento salvo com sucesso!');
+    this.reset();
+    renderList();
+  });
+
+  renderList();
+</script>
+</body>
+</html>

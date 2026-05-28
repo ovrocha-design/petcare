@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel para Pets — PetCare</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .servico-hero {
+      background: linear-gradient(to right, #3B82F6, #4ADE80);
+      padding: 48px 0 0 0;
+      overflow: hidden;
+    }
+    .servico-hero .breadcrumb { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 24px; }
+    .servico-hero .breadcrumb a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    .servico-hero .breadcrumb a:hover { color: #fff; }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: flex-end; }
+    .hero-left { padding-bottom: 48px; }
+    .hero-left h1 { color: #fff; font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0 0 12px; }
+    .hero-left .subtitulo { color: rgba(255,255,255,0.9); font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+    .hero-left .linha-branca { width: 48px; height: 4px; background: #fff; border-radius: 2px; margin: 16px 0 20px; }
+    .hero-left .descricao { color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .hero-botoes { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+    .btn-branco { background: #fff; color: #3B82F6; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; }
+    .btn-outline-branco { background: transparent; color: #fff; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px; border: 2px solid rgba(255,255,255,0.6); cursor: pointer; }
+    .proof-line { display: flex; align-items: center; gap: 12px; }
+    .proof-avatares { display: flex; }
+    .av { width: 32px; height: 32px; border-radius: 50%; background: #BFDBFE; color: #1D4ED8; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 2px solid rgba(255,255,255,0.6); margin-left: -6px; }
+    .av:first-child { margin-left: 0; }
+    .nota-pill { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 4px 10px; border-radius: 6px; color: #fff; font-weight: 700; font-size: 14px; }
+    .estrelas { color: #FBBF24; font-size: 16px; }
+    .clientes-txt { color: rgba(255,255,255,0.85); font-size: 13px; }
+    .hero-right img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 20px 20px 0 0; display: block; }
+ 
+    /* FEATURES BAR */
+    .features-bar { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px; }
+    .features-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+    .feature-item { display: flex; align-items: flex-start; gap: 16px; }
+    .feature-icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .feature-item h4 { font-size: 14px; font-weight: 700; color: #111827; margin: 0 0 4px; }
+    .feature-item p { font-size: 12px; color: #6B7280; margin: 0; line-height: 1.4; }
+ 
+    /* COMO FUNCIONA */
+    .como-funciona { padding: 72px 0; background: #F9FAFB; }
+    .section-label { color: #3B82F6; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 12px; }
+    .como-funciona h2 { text-align: center; font-size: 32px; font-weight: 800; color: #111827; margin: 0; }
+    .linha-verde-centro { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 16px auto 48px; }
+    .steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+    .step-card { text-align: center; padding: 32px 16px; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; margin: 0 auto 16px; }
+    .step-num.azul { background: #3B82F6; color: #fff; }
+    .step-num.verde { background: #4ADE80; color: #fff; }
+    .step-num.roxo { background: #8B5CF6; color: #fff; }
+    .step-num.laranja { background: #F97316; color: #fff; }
+    .step-card .step-icon { font-size: 36px; margin-bottom: 12px; }
+    .step-card h3 { font-size: 16px; font-weight: 700; color: #111827; margin: 0 0 8px; }
+    .step-card p { font-size: 13px; color: #6B7280; line-height: 1.5; margin: 0; }
+ 
+    /* ESTRUTURA */
+    .estrutura { padding: 72px 0; background: #fff; }
+    .estrutura h2 { text-align: center; font-size: 28px; font-weight: 800; color: #111827; margin: 0 0 48px; }
+    .estrutura-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+    .estrutura-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 16px; margin-bottom: 12px; }
+    .estrutura-card h4 { text-align: center; font-size: 14px; font-weight: 700; color: #111827; margin: 0; }
+ 
+    /* TRANQUILIDADE */
+    .tranquilidade { padding: 72px 0; background: #F9FAFB; }
+    .tran-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .tran-esquerda { position: relative; }
+    .tran-esquerda img { width: 100%; border-radius: 50%; max-width: 320px; object-fit: cover; aspect-ratio: 1; display: block; margin: 0 auto; }
+    .tran-blob { position: absolute; width: 200px; height: 200px; background: #4ADE80; border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; top: -20px; right: 0; z-index: 0; opacity: 0.3; }
+    .tran-label { color: #4ADE80; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .tran-texto h2 { font-size: 32px; font-weight: 800; color: #111827; line-height: 1.2; margin: 0 0 8px; }
+    .linha-verde { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 16px 0 20px; }
+    .tran-texto p { color: #6B7280; font-size: 15px; line-height: 1.6; margin-bottom: 24px; }
+    .tran-lista { list-style: none; padding: 0; margin: 0 0 32px; }
+    .tran-lista li { display: flex; align-items: center; gap: 10px; color: #374151; font-size: 14px; margin-bottom: 10px; }
+    .tran-lista li::before { content: '✅'; }
+    .depoimento-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .dep-stars { color: #FBBF24; font-size: 18px; margin-bottom: 10px; }
+    .dep-texto { font-size: 14px; color: #374151; font-style: italic; margin-bottom: 16px; line-height: 1.5; }
+    .dep-autor { display: flex; align-items: center; gap: 10px; }
+    .dep-avatar { width: 36px; height: 36px; border-radius: 50%; background: #BFDBFE; color: #1D4ED8; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+    .dep-info strong { font-size: 13px; color: #111827; display: block; }
+    .dep-info span { font-size: 12px; color: #6B7280; }
+ 
+    /* CTA */
+    .cta-final { background: linear-gradient(to right, #3B82F6, #4ADE80); padding: 48px 0; }
+    .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .cta-inner .pata-icon { font-size: 48px; }
+    .cta-texto h2 { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+    .cta-texto p { color: rgba(255,255,255,0.85); font-size: 14px; margin: 0; }
+    .btn-cta-branco { background: #fff; color: #3B82F6; padding: 14px 28px; border-radius: 9999px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; white-space: nowrap; }
+    .btn-cta-branco:hover { background: #F0FDF4; }
+ 
+    @media (max-width: 768px) {
+      .hero-inner, .tran-inner { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .features-grid, .steps-grid, .estrutura-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- HERO -->
+  <section class="servico-hero">
+    <div class="container">
+      <p class="breadcrumb">
+        <a href="../index.html">Início</a> › <a href="index.html#services">Nossos serviços</a> › Hotel para Pets
+      </p>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <h1>Hotel para Pets</h1>
+          <p class="subtitulo">Hospedagem segura, confortável e cheia de carinho para o seu melhor amigo.</p>
+          <div class="linha-branca"></div>
+          <p class="descricao">Aqui seu pet se sente em casa! Oferecemos ambiente seguro, monitoramento 24h e muita diversão enquanto você viaja ou precisa se ausentar.</p>
+          <div class="hero-botoes">
+            <button class="btn-branco" onclick="location.href='agendamento.html'">📅 Reservar hospedagem</button>
+            <button class="btn-outline-branco" onclick="location.href='#estrutura'">Ver estrutura</button>
+          </div>
+          <div class="proof-line">
+            <div class="proof-avatares">
+              <div class="av">AM</div>
+              <div class="av" style="background:#BBF7D0;color:#166534;">LC</div>
+              <div class="av" style="background:#FEF3C7;color:#92400E;">RF</div>
+              <div class="av">+</div>
+            </div>
+            <div class="nota-pill">4,9</div>
+            <div class="estrelas">★★★★★</div>
+            <div class="clientes-txt">+500 clientes satisfeitos</div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img src="images/hotel.jpeg" alt="Hotel para Pets PetCare">
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- FEATURES BAR -->
+  <section class="features-bar">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#EFF6FF;">🛡️</div>
+          <div>
+            <h4>Segurança 24h</h4>
+            <p>Monitoramento constante e equipe treinada para garantir a segurança do seu pet.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#F0FDF4;">🎾</div>
+          <div>
+            <h4>Recreação e diversão</h4>
+            <p>Atividades e brincadeiras diárias para gastar energia e garantir o bem-estar.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#F5F3FF;">🏠</div>
+          <div>
+            <h4>Ambiente confortável</h4>
+            <p>Espaços climatizados, limpos e preparados para oferecer o máximo de conforto.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#FFF7ED;">❤️</div>
+          <div>
+            <h4>Carinho e atenção</h4>
+            <p>Tratamos cada pet com amor, respeito e atenção como se fosse nosso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- COMO FUNCIONA -->
+  <section class="como-funciona">
+    <div class="container">
+      <div class="section-label">Como funciona nossa hospedagem</div>
+      <div class="linha-verde-centro"></div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num azul">01</div>
+          <div class="step-icon">📅</div>
+          <h3>Faça sua reserva</h3>
+          <p>Entre em contato e escolha as datas da hospedagem do seu pet.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num verde">02</div>
+          <div class="step-icon">🐕</div>
+          <h3>Traga seu pet</h3>
+          <p>Recebemos seu pet com todo cuidado e realizamos uma avaliação inicial.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num roxo">03</div>
+          <div class="step-icon">🏨</div>
+          <h3>Hospedagem com amor</h3>
+          <p>Seu pet aproveita dias de conforto, diversão e muito carinho com nossa equipe.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num laranja">04</div>
+          <div class="step-icon">❤️</div>
+          <h3>Retirada</h3>
+          <p>Você busca seu pet e recebe todas as informações sobre a estadia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ESTRUTURA -->
+  <section class="estrutura" id="estrutura">
+    <div class="container">
+      <h2>Estrutura completa para o bem-estar do seu pet</h2>
+      <div class="estrutura-grid">
+        <div class="estrutura-card">
+          <img src="images/suites.jpeg" alt="Suítes confortáveis">
+          <h4>Suítes confortáveis</h4>
+        </div>
+        <div class="estrutura-card">
+          <img src="images/recreacao.jpeg" alt="Área de recreação">
+          <h4>Área de recreação</h4>
+        </div>
+        <div class="estrutura-card">
+          <img src="images/atividades.jpeg" alt="Atividades diárias">
+          <h4>Atividades diárias</h4>
+        </div>
+        <div class="estrutura-card">
+          <img src="images/monitoramento.jpeg" alt="Monitoramento 24h">
+          <h4>Monitoramento 24h</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- TRANQUILIDADE -->
+  <section class="tranquilidade">
+    <div class="container">
+      <div class="tran-inner">
+        <div class="tran-esquerda">
+          <div class="tran-blob"></div>
+          <img src="images/hotel.jpeg" alt="Pet feliz no hotel">
+        </div>
+        <div class="tran-texto">
+          <div class="tran-label">Tranquilidade para você</div>
+          <h2>Seu pet em boas mãos, você viaja tranquilo.</h2>
+          <div class="linha-verde"></div>
+          <p>Nossa equipe é apaixonada por pets e preparada para oferecer uma experiência única de hospedagem.</p>
+          <ul class="tran-lista">
+            <li>Alimentação personalizada</li>
+            <li>Administração de medicamentos (se necessário)</li>
+            <li>Relatórios diários com fotos e vídeos</li>
+            <li>Equipe veterinária de plantão</li>
+          </ul>
+          <div class="depoimento-card">
+            <div class="dep-stars">★★★★★</div>
+            <p class="dep-texto">"Deixei meu doguinho por 5 dias e foi maravilhoso! Recebi fotos todos os dias e ele voltou super feliz. Super recomendo!"</p>
+            <div class="dep-autor">
+              <div class="dep-avatar">JM</div>
+              <div class="dep-info">
+                <strong>Juliana M.</strong>
+                <span>Tutora do Thor</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="pata-icon">🐾</div>
+        <div class="cta-texto">
+          <h2>Reserve agora o hotel do seu pet!</h2>
+          <p>Garanta conforto, segurança e diversão para quem você ama.</p>
+        </div>
+        <button class="btn-cta-branco" onclick="location.href='agendamento.html'">📅 Reservar hospedagem</button>
+      </div>
+    </div>
+  </section>
+ 
+  <script src="js/storage.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

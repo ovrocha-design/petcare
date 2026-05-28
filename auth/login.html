@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | PetCare</title>
+  <style>
+    /* ============================================
+       ESTILO IGUAL AO SITE PETCARE
+    ============================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CARD PRINCIPAL */
+    .login-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      border: 1px solid #F3F4F6;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+    }
+
+    /* LOGO */
+    .logo-card {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-card .logo-icon {
+      width: 60px;
+      height: 60px;
+      background: #EFF6FF;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 12px;
+    }
+
+    .logo-card h2 {
+      color: #111827;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    /* HEADER DO FORM */
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-header h2 {
+      color: #111827;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      color: #4B5563;
+      font-size: 14px;
+    }
+
+    /* INPUTS */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: #FFFFFF;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #3B82F6;
+    }
+
+    /* BOTÕES */
+    .btn-login {
+      width: 100%;
+      padding: 12px 20px;
+      background: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      font-family: inherit;
+      transition: opacity 0.2s;
+    }
+
+    .btn-login:hover {
+      opacity: 0.87;
+    }
+
+    .btn-cadastrar {
+      width: 100%;
+      padding: 12px 20px;
+      background: #22C55E;
+      color: white;
+      border: none;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      font-family: inherit;
+      transition: opacity 0.2s;
+    }
+
+    .btn-cadastrar:hover {
+      opacity: 0.87;
+    }
+
+    /* LINK */
+    .toggle-link {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .toggle-link a {
+      color: #3B82F6;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .toggle-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* MENSAGENS */
+    .mensagem {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .mensagem.sucesso {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .mensagem.erro {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  
+  <div class="logo-card">
+    <div class="logo-icon">🐾</div>
+    <h2>PetCare</h2>
+  </div>
+
+  <!-- TELA DE LOGIN -->
+  <div id="telaLogin">
+    <div class="login-header">
+      <h2>Bem-vindo de volta!</h2>
+      <p>Faça login para continuar</p>
+    </div>
+
+    <div class="input-group">
+      <label>E-mail</label>
+      <input type="email" id="loginEmail" placeholder="seu@email.com">
+    </div>
+
+    <div class="input-group">
+      <label>Senha</label>
+      <input type="password" id="loginSenha" placeholder="••••••">
+    </div>
+
+    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
+
+    <div class="toggle-link">
+      <a onclick="mostrarTelaCadastro()">Não tem conta? Cadastre-se</a>
+    </div>
+
+    <div id="msgLogin" class="mensagem"></div>
+  </div>
+
+  <!-- TELA DE CADASTRO -->
+  <div id="telaCadastro" class="hidden">
+    <div class="login-header">
+      <h2>Criar Conta</h2>
+      <p>Cadastre-se para começar</p>
+    </div>
+
+    <div class="input-group">
+      <label>Nome completo</label>
+      <input type="text" id="cadNome" placeholder="Digite seu nome">
+    </div>
+
+    <div class="input-group">
+      <label>E-mail</label>
+      <input type="email" id="cadEmail" placeholder="seu@email.com">
+    </div>
+
+    <div class="input-group">
+      <label>Senha</label>
+      <input type="password" id="cadSenha" placeholder="Mínimo 3 caracteres">
+    </div>
+
+    <button class="btn-cadastrar" onclick="fazerCadastro()">Cadastrar</button>
+
+    <div class="toggle-link">
+      <a onclick="mostrarTelaLogin()">Já tem conta? Faça login</a>
+    </div>
+
+    <div id="msgCadastro" class="mensagem"></div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

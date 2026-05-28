@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta Veterinária — PetCare</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .servico-hero {
+      background: linear-gradient(to right, #3B82F6, #4ADE80);
+      padding: 48px 0 0 0;
+      overflow: hidden;
+    }
+    .servico-hero .breadcrumb { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 24px; }
+    .servico-hero .breadcrumb a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    .servico-hero .breadcrumb a:hover { color: #fff; }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: flex-end; }
+    .hero-left { padding-bottom: 48px; }
+    .hero-left h1 { color: #fff; font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0 0 12px; }
+    .hero-left .subtitulo { color: rgba(255,255,255,0.9); font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+    .hero-left .linha-verde { width: 48px; height: 4px; background: #fff; border-radius: 2px; margin: 16px 0 20px; }
+    .hero-left .descricao { color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .hero-botoes { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+    .btn-branco { background: #fff; color: #3B82F6; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px; border: none; cursor: pointer; }
+    .btn-outline-branco { background: transparent; color: #fff; padding: 12px 24px; border-radius: 9999px; font-weight: 700; font-size: 14px; border: 2px solid rgba(255,255,255,0.6); cursor: pointer; }
+    .proof-line { display: flex; align-items: center; gap: 12px; }
+    .proof-avatares { display: flex; }
+    .av { width: 32px; height: 32px; border-radius: 50%; background: #BFDBFE; color: #1D4ED8; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 2px solid rgba(255,255,255,0.6); margin-left: -6px; }
+    .av:first-child { margin-left: 0; }
+    .nota-pill { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 4px 10px; border-radius: 6px; color: #fff; font-weight: 700; font-size: 14px; }
+    .estrelas { color: #FBBF24; font-size: 16px; }
+    .clientes-txt { color: rgba(255,255,255,0.85); font-size: 13px; }
+    .hero-right img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 20px 20px 0 0; display: block; }
+ 
+    /* FEATURES BAR */
+    .features-bar { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,0.08); padding: 32px; margin: 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+    .feature-item { display: flex; align-items: flex-start; gap: 16px; }
+    .feature-icon-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .feature-item h4 { font-size: 14px; font-weight: 700; color: #111827; margin: 0 0 4px; }
+    .feature-item p { font-size: 12px; color: #6B7280; margin: 0; line-height: 1.4; }
+ 
+    /* O QUE OFERECEMOS */
+    .oferecemos { padding: 72px 0; background: #F9FAFB; }
+    .oferecemos .section-label { color: #3B82F6; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 12px; }
+    .oferecemos h2 { text-align: center; font-size: 32px; font-weight: 800; color: #111827; margin: 0 0 8px; }
+    .linha-verde-centro { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 0 auto 48px; }
+    .oferecemos-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .oferta-card { background: #fff; border-radius: 16px; padding: 24px; border: 1px solid #F3F4F6; display: flex; align-items: flex-start; gap: 16px; }
+    .oferta-icon { font-size: 28px; }
+    .oferta-card h4 { font-size: 15px; font-weight: 700; color: #111827; margin: 0 0 6px; }
+    .oferta-card p { font-size: 13px; color: #6B7280; margin: 0; line-height: 1.5; }
+ 
+    /* DIFERENCIAL */
+    .diferencial { padding: 72px 0; background: #fff; }
+    .dif-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .dif-inner img { width: 100%; border-radius: 20px; object-fit: cover; max-height: 420px; }
+    .dif-label { color: #4ADE80; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .dif-texto h2 { font-size: 32px; font-weight: 800; color: #111827; margin: 0 0 8px; line-height: 1.2; }
+    .linha-verde { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 16px 0 20px; }
+    .dif-texto p { color: #6B7280; font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .dif-icons-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+    .dif-icon-item { text-align: center; }
+    .dif-icon-item .ico { font-size: 28px; margin-bottom: 8px; }
+    .dif-icon-item h4 { font-size: 12px; font-weight: 700; color: #111827; margin: 0; }
+ 
+    /* CTA */
+    .cta-final { background: linear-gradient(to right, #3B82F6, #4ADE80); padding: 48px 0; }
+    .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .cta-inner .pata-icon { font-size: 48px; }
+    .cta-texto h2 { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+    .cta-texto p { color: rgba(255,255,255,0.85); font-size: 14px; margin: 0; }
+    .btn-cta-branco { background: #fff; color: #3B82F6; padding: 14px 28px; border-radius: 9999px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; white-space: nowrap; }
+    .btn-cta-branco:hover { background: #F0FDF4; }
+ 
+    @media (max-width: 768px) {
+      .hero-inner, .dif-inner { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .features-grid, .oferecemos-grid { grid-template-columns: 1fr 1fr; }
+      .dif-icons-grid { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- HERO -->
+  <section class="servico-hero">
+    <div class="container">
+      <p class="breadcrumb">
+        <a href="../index.html">Início</a> › <a href="index.html#services">Nossos serviços</a> › Consulta Veterinária
+      </p>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <h1>Consulta Veterinária</h1>
+          <p class="subtitulo">Cuidado, prevenção e saúde para seu pet viver melhor e por mais tempo.</p>
+          <div class="linha-verde"></div>
+          <p class="descricao">Atendimento com veterinários especializados, exames completos e orientações personalizadas para todas as fases da vida do seu animal.</p>
+          <div class="hero-botoes">
+            <button class="btn-branco" onclick="location.href='agendamento.html'">📅 Agendar consulta</button>
+            <button class="btn-outline-branco" onclick="location.href='#oferecemos'">Nossos serviços</button>
+          </div>
+          <div class="proof-line">
+            <div class="proof-avatares">
+              <div class="av">AM</div>
+              <div class="av" style="background:#BBF7D0;color:#166534;">LC</div>
+              <div class="av" style="background:#FEF3C7;color:#92400E;">RF</div>
+              <div class="av">+</div>
+            </div>
+            <div class="nota-pill">4,9</div>
+            <div class="estrelas">★★★★★</div>
+            <div class="clientes-txt">+500 clientes satisfeitos</div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img src="images/Veterinario.jpeg" alt="Consulta Veterinária PetCare">
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- FEATURES BAR -->
+  <section class="features-bar">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#EFF6FF;">❤️</div>
+          <div>
+            <h4>Atendimento humanizado</h4>
+            <p>Tratamos seu pet com carinho, respeito e atenção em cada consulta.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#F0FDF4;">🩺</div>
+          <div>
+            <h4>Veterinários especializados</h4>
+            <p>Profissionais qualificados para cuidar da saúde do seu pet com excelência.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#F5F3FF;">📋</div>
+          <div>
+            <h4>Diagnóstico preciso</h4>
+            <p>Equipamentos modernos para exames completos e resultados confiáveis.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon-circle" style="background:#FFF7ED;">🛡️</div>
+          <div>
+            <h4>Prevenção é o melhor cuidado</h4>
+            <p>Acompanhamento contínuo para uma vida longa, saudável e feliz.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- O QUE OFERECEMOS -->
+  <section class="oferecemos" id="oferecemos">
+    <div class="container">
+      <div class="section-label">O que oferecemos na consulta</div>
+      <div class="linha-verde-centro"></div>
+      <div class="oferecemos-grid">
+        <div class="oferta-card">
+          <div class="oferta-icon">🩺</div>
+          <div>
+            <h4>Exame clínico completo</h4>
+            <p>Avaliação geral da saúde para prevenir e identificar problemas precocemente.</p>
+          </div>
+        </div>
+        <div class="oferta-card">
+          <div class="oferta-icon">💉</div>
+          <div>
+            <h4>Vacinação</h4>
+            <p>Calendário vacinal atualizado para manter seu pet protegido contra doenças.</p>
+          </div>
+        </div>
+        <div class="oferta-card">
+          <div class="oferta-icon">🧪</div>
+          <div>
+            <h4>Exames laboratoriais</h4>
+            <p>Exames de sangue, fezes, urina e outros para um diagnóstico mais assertivo.</p>
+          </div>
+        </div>
+        <div class="oferta-card">
+          <div class="oferta-icon">🐣</div>
+          <div>
+            <h4>Acompanhamento para todas as idades</h4>
+            <p>Cuidados especiais para filhotes, adultos e pets idosos.</p>
+          </div>
+        </div>
+        <div class="oferta-card">
+          <div class="oferta-icon">📝</div>
+          <div>
+            <h4>Orientações personalizadas</h4>
+            <p>Dicas e orientações para alimentação, comportamento e bem-estar do seu pet.</p>
+          </div>
+        </div>
+        <div class="oferta-card">
+          <div class="oferta-icon">🦷</div>
+          <div>
+            <h4>Saúde bucal</h4>
+            <p>Avaliação da saúde bucal e prevenção de doenças periodontais.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- DIFERENCIAL -->
+  <section class="diferencial">
+    <div class="container">
+      <div class="dif-inner">
+        <img src="images/imagemveterinario2.jpeg" alt="Veterinário cuidando de um gato">
+        <div class="dif-texto">
+          <div class="dif-label">Cuidado que faz a diferença</div>
+          <h2>Consultas regulares, mais saúde e qualidade de vida para seu pet.</h2>
+          <div class="linha-verde"></div>
+          <p>A consulta veterinária é essencial para garantir que seu pet esteja sempre bem. Aqui na PetCare, unimos tecnologia, experiência e amor pelos animais para oferecer o melhor atendimento.</p>
+          <div class="dif-icons-grid">
+            <div class="dif-icon-item">
+              <div class="ico">🐾</div>
+              <h4>Ambiente seguro e acolhedor</h4>
+            </div>
+            <div class="dif-icon-item">
+              <div class="ico">⚕️</div>
+              <h4>Equipamentos de alta tecnologia</h4>
+            </div>
+            <div class="dif-icon-item">
+              <div class="ico">👨‍⚕️</div>
+              <h4>Profissionais apaixonados</h4>
+            </div>
+            <div class="dif-icon-item">
+              <div class="ico">📅</div>
+              <h4>Atendimento com hora marcada</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="pata-icon">🐾</div>
+        <div class="cta-texto">
+          <h2>Agende agora a consulta do seu pet!</h2>
+          <p>Estamos prontos para cuidar de quem você ama.</p>
+        </div>
+        <button class="btn-cta-branco" onclick="location.href='agendamento.html'">📅 Agendar consulta</button>
+      </div>
+    </div>
+  </section>
+ 
+  <script src="js/storage.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+ 

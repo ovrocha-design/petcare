@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras — PetCare</title>
+
+    <!-- Estilos globais do projeto (paleta, botões, header, footer…) -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Estilos específicos desta página -->
+    <link rel="stylesheet" href="../css/carrinho.css">
+</head>
+<body>
+
+    <!-- O header é injetado automaticamente pelo main.js -->
+
+    <!-- ── BANNER DA PÁGINA ── -->
+    <!-- Gradiente azul→verde com breadcrumb e contagem de itens -->
+    <section class="page-hero">
+        <div class="container">
+            <p class="breadcrumb">
+                <a href="../index.html">Início</a> / Carrinho
+            </p>
+            <h1>🛒 Carrinho de Compras</h1>
+            <!-- Atualizado via JS com a quantidade de produtos -->
+            <p id="contador-produtos">Carregando...</p>
+        </div>
+    </section>
+
+    <!-- ── CONTEÚDO PRINCIPAL ── -->
+    <main>
+        <div class="container">
+            <!-- Todo o conteúdo do carrinho é montado aqui pelo JavaScript -->
+            <div id="conteudo-carrinho"></div>
+        </div>
+    </main>
+
+    <!-- O footer é injetado automaticamente pelo main.js -->
+
+    <!-- ── SCRIPTS OBRIGATÓRIOS (sempre nesta ordem) ── -->
+    <!-- storage.js expõe o objeto global Storage para CRUD no localStorage -->
+    <script src="../js/storage.js"></script>
+    <!-- main.js injeta header, footer, badge do carrinho e a função mostrarToast -->
+    <script src="../js/main.js"></script>
+
+    <!-- ── JAVASCRIPT ESPECÍFICO DO CARRINHO ── -->
+    <script>
+
+        /* ============================================================
+           INICIALIZAÇÃO  (Aula 7 — eventos: addEventListener)
+           Aguarda o carregamento completo da página (incluindo os
+           scripts acima) antes de renderizar o conteúdo do carrinho.
+           ============================================================ */
+        window.addEventListener('load', function () {
+            renderizarCarrinho();
+        });
+
+
+        /* ============================================================
+           RENDERIZAÇÃO PRINCIPAL  (Aula 6 — const/let, template literals,
+                                    forEach, operador ternário)
+           Lê o carrinho do localStorage via Storage.getList() e
+           reconstrói todo o HTML da página a cada alteração.
+           ============================================================ */
+        function renderizarCarrinho() {
+            const carrinho  = Storage.getList('petcare_carrinho');       // Aula 7 — localStorage (via storage.js)
+            const conteudo  = document.getElementById('conteudo-carrinho'); // Aula 7 — getElementById
+            const contador  = document.getElementById('contador-produtos');
+
+            /* Atualiza o subtítulo do banner com a contagem de itens
+               Aula 6 — template literals: `${variável}` */
+            if (carrinho.length === 0) {
+                contador.textContent = 'Seu carrinho está vazio';
+            } else if (carrinho.length === 1) {
+                contador.textContent = '1 produto no seu carrinho';
+            } else {
+                contador.textContent = `${carrinho.length} produtos no seu carrinho`;
+            }
+
+            /* Estado vazio: mostra mensagem e link para a loja
+               Aula 6 — template literals para montar HTML */
+            if (carrinho.length === 0) {
+                conteudo.innerHTML = `
+                    <div class="card carrinho-vazio">
+                        <div class="icone-vazio">🛒</div>
+                        <h2 class="vazio-titulo">Seu carrinho está vazio</h2>
+                        <p class="vazio-texto">Adicione produtos para começar suas compras</p>
+                        <a href="../produtos/produtos.html" class="btn btn-primary btn-primary-centered">Ver Produtos</a>
+                    </div>`;
+                return;
+            }
+
+            /* Calcula os valores financeiros
+               Aula 6 — reduce com arrow function para somar o subtotal
+               Aula 6 — operador ternário para frete grátis */
+            const subtotal = calcularSubtotal(carrinho);
+            const frete    = subtotal >= 200 ? 0 : 15.90;
+            const total    = subtotal + frete;
+
+            /* ── Coluna 1: lista de produtos ─────────────────────── */
+            let html = '<div class="carrinho-grid">';
+
+            html += '<div>';
+            html += '<div class="cabecalho-produtos">';
+            html += `<h2 class="titulo-secao">Produtos (${carrinho.length})</h2>`;
+            html += '<button class="btn-limpar" onclick="limparCarrinho()">🗑️ Limpar carrinho</button>';
+            html += '</div>';
+
+            /* Aula 6 — forEach com arrow function para percorrer o array */
+            carrinho.forEach(produto => {
+                html += montarHtmlProduto(produto);
+            });
+
+            html += '</div>';
+
+            /* ── Coluna 2: resumo do pedido ──────────────────────── */
+            html += '<div><div class="resumo-card">';
+            html += '<h2 class="resumo-titulo">Resumo do Pedido</h2>';
+
+            /* Aula 6 — template literals para interpolação de valores */
+            html += `<div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <span class="valor-destaque">R$ ${subtotal.toFixed(2)}</span>
+                     </div>`;
+
+            /* Aula 6 — operador ternário: frete grátis ou valor */
+            html += '<div class="resumo-linha"><span>Frete</span>';
+            html += frete === 0
+                ? '<span class="frete-gratis">GRÁTIS</span>'
+                : `<span class="valor-destaque">R$ ${frete.toFixed(2)}</span>`;
+            html += '</div>';
+
+            /* Alerta de progresso para frete grátis */
+            if (subtotal < 200) {
+                const faltam = (200 - subtotal).toFixed(2);
+                html += `<div class="alerta-frete">
+                            💡 Faltam <strong>R$ ${faltam}</strong> para frete grátis!
+                         </div>`;
+            }
+
+            html += `<div class="resumo-linha-total">
+                        <span class="resumo-total-label">Total</span>
+                        <span class="resumo-total-valor">R$ ${total.toFixed(2)}</span>
+                     </div>`;
+
+            html += '<a href="checkout.html" class="btn btn-primary">Finalizar Compra</a>';
+            html += '<a href="../produtos/produtos.html" class="btn btn-outline">Continuar Comprando</a>';
+
+            html += '</div></div></div>';   /* fecha resumo-card, coluna 2 e carrinho-grid */
+
+            /* Aula 7 — innerHTML para atualizar o DOM */
+            conteudo.innerHTML = html;
+        }
+
+
+        /* ============================================================
+           MONTAR HTML DE UM PRODUTO  (Aula 6 — template literals)
+           Recebe um objeto do carrinho e retorna o HTML do card.
+           Estrutura esperada: { id, nome, preco, img, qtd }
+           ============================================================ */
+        function resolveImg(src) {
+            if (!src) return '../images/produto1.png';
+            if (src.startsWith('http') || src.startsWith('../') || src.startsWith('/')) return src;
+            return '../' + src;
+        }
+
+        function montarHtmlProduto(produto) {
+            const subtotalProduto = produto.preco * produto.qtd;
+
+            /* Aula 6 — template literal de múltiplas linhas */
+            return `
+                <div class="card">
+                    <div class="produto-item">
+
+                        <img src="${resolveImg(produto.img)}" alt="${produto.nome}" class="produto-img">
+
+                        <div class="produto-info">
+                            <h3 class="produto-nome">${produto.nome}</h3>
+                            <p class="produto-preco">R$ ${produto.preco.toFixed(2)}</p>
+
+                            <div class="qtd-controls">
+                                <span>Quantidade:</span>
+                                <div class="qtd-box">
+                                    <!-- Botão − fica desabilitado quando qtd = 1 -->
+                                    <button class="btn-qtd"
+                                            onclick="alterarQuantidade(${produto.id}, -1)"
+                                            ${produto.qtd <= 1 ? 'disabled' : ''}>−</button>
+                                    <span class="qtd-valor">${produto.qtd}</span>
+                                    <button class="btn-qtd"
+                                            onclick="alterarQuantidade(${produto.id}, 1)">+</button>
+                                </div>
+                                <span class="subtotal-item">
+                                    Subtotal: <span class="valor-destaque">R$ ${subtotalProduto.toFixed(2)}</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <button class="btn-remover"
+                                onclick="removerProduto(${produto.id})"
+                                title="Remover produto">×</button>
+                    </div>
+                </div>`;
+        }
+
+
+        /* ============================================================
+           CALCULAR SUBTOTAL  (Aula 6 — reduce com arrow function)
+           Soma preço × quantidade de todos os itens do carrinho.
+           array.reduce((acumulador, elementoAtual) => ..., valorInicial)
+           ============================================================ */
+        function calcularSubtotal(carrinho) {
+            return carrinho.reduce(
+                (acumulador, item) => acumulador + (item.preco * item.qtd),
+                0   /* valor inicial do acumulador */
+            );
+        }
+
+
+        /* ============================================================
+           ALTERAR QUANTIDADE  (Aula 6 — find via Storage.findInList,
+                                         Math.max para valor mínimo,
+                                         const/let)
+           Incrementa ou decrementa a quantidade de um produto.
+           @param idProduto  ID do produto no localStorage
+           @param delta      +1 para aumentar | -1 para diminuir
+           ============================================================ */
+        function alterarQuantidade(idProduto, delta) {
+            /* Aula 6 — find: localiza o primeiro item que satisfaz a condição */
+            const item = Storage.findInList('petcare_carrinho', idProduto);
+            if (!item) return;
+
+            /* Math.max garante quantidade mínima de 1 */
+            const novaQtd = Math.max(1, item.qtd + delta);
+
+            /* Aula 7 — localStorage (via storage.js): atualiza o item */
+            Storage.updateInList('petcare_carrinho', idProduto, { qtd: novaQtd });
+            renderizarCarrinho();
+        }
+
+
+        /* ============================================================
+           REMOVER PRODUTO  (Aula 6 — window.confirm, Aula 7 — localStorage)
+           Pede confirmação e remove um produto específico do carrinho.
+           ============================================================ */
+        function removerProduto(idProduto) {
+            /* Aula 6 — window.confirm retorna true (OK) ou false (Cancelar) */
+            if (confirm('Deseja realmente remover este produto do carrinho?')) {
+                Storage.removeFromList('petcare_carrinho', idProduto);
+                renderizarCarrinho();
+                mostrarToast('Produto removido do carrinho', 'success');
+            }
+        }
+
+
+        /* ============================================================
+           LIMPAR CARRINHO  (Aula 6 — window.confirm, Aula 7 — localStorage)
+           Pede confirmação e apaga todos os itens de uma vez,
+           removendo a chave inteira do localStorage.
+           ============================================================ */
+        function limparCarrinho() {
+            if (confirm('Deseja realmente limpar todo o carrinho?')) {
+                Storage.remove('petcare_carrinho');   /* remove a chave inteira */
+                renderizarCarrinho();
+                mostrarToast('Carrinho limpo com sucesso', 'success');
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banho e Tosa — PetCare</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── HERO ── */
+    .servico-hero {
+      background: linear-gradient(to right, #3B82F6, #4ADE80);
+      padding: 48px 0 0 0;
+      overflow: hidden;
+    }
+    .servico-hero .breadcrumb {
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .servico-hero .breadcrumb a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    .servico-hero .breadcrumb a:hover { color: #fff; }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: flex-end;
+    }
+    .hero-left { padding-bottom: 48px; }
+    .hero-left h1 { color: #fff; font-size: 48px; font-weight: 800; line-height: 1.1; margin: 0 0 12px; }
+    .hero-left .subtitulo { color: rgba(255,255,255,0.9); font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+    .hero-left .linha-verde { width: 48px; height: 4px; background: #fff; border-radius: 2px; margin: 16px 0 20px; }
+    .hero-left .descricao { color: rgba(255,255,255,0.85); font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .hero-icons { display: flex; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+    .hero-icon-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .hero-icon-item .icone-circulo {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .hero-icon-item span { color: rgba(255,255,255,0.9); font-size: 12px; text-align: center; max-width: 70px; line-height: 1.3; }
+    .hero-right img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: cover;
+      border-radius: 20px 20px 0 0;
+      display: block;
+    }
+ 
+    /* ── PROOF BAR ── */
+    .proof-bar {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin: -24px 0 0 0;
+      position: relative;
+      z-index: 2;
+    }
+    .proof-bar .pata { font-size: 32px; }
+    .proof-bar .proof-texto { flex: 1; }
+    .proof-bar .proof-texto strong { font-size: 16px; color: #111827; display: block; }
+    .proof-bar .proof-texto span { font-size: 13px; color: #6B7280; }
+    .proof-bar .proof-avatares { display: flex; gap: -6px; }
+    .proof-bar .av {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: #BFDBFE; color: #1D4ED8;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      border: 2px solid #fff;
+      margin-left: -8px;
+    }
+    .proof-bar .av:first-child { margin-left: 0; }
+    .proof-bar .nota {
+      background: #F0FDF4; border: 1px solid #BBF7D0;
+      padding: 6px 14px; border-radius: 8px;
+      font-weight: 700; color: #166534; font-size: 16px;
+    }
+    .proof-bar .estrelas { color: #FBBF24; font-size: 18px; }
+    .proof-bar .clientes { font-size: 13px; color: #6B7280; }
+ 
+    /* ── COMO FUNCIONA ── */
+    .como-funciona { padding: 72px 0; background: #F9FAFB; }
+    .como-funciona .section-label { color: #3B82F6; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 12px; }
+    .como-funciona h2 { text-align: center; font-size: 32px; font-weight: 800; color: #111827; margin: 0 0 8px; }
+    .como-funciona .subtitulo-sec { text-align: center; color: #6B7280; margin-bottom: 48px; }
+    .linha-verde-centro { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 0 auto 48px; }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .step-card { text-align: center; padding: 32px 16px; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; margin: 0 auto 16px;
+    }
+    .step-num.azul { background: #3B82F6; color: #fff; }
+    .step-num.verde { background: #4ADE80; color: #fff; }
+    .step-num.roxo { background: #8B5CF6; color: #fff; }
+    .step-num.laranja { background: #F97316; color: #fff; }
+    .step-card .step-icon { font-size: 36px; margin-bottom: 12px; }
+    .step-card h3 { font-size: 16px; font-weight: 700; color: #111827; margin: 0 0 8px; }
+    .step-card p { font-size: 13px; color: #6B7280; line-height: 1.5; margin: 0; }
+ 
+    /* ── DIFERENCIAIS ── */
+    .diferenciais { padding: 72px 0; background: #fff; }
+    .diferenciais-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .diferenciais-inner img { width: 100%; border-radius: 20px; object-fit: cover; max-height: 420px; }
+    .diferenciais-texto h2 { font-size: 32px; font-weight: 800; color: #111827; margin: 0 0 8px; line-height: 1.2; }
+    .diferenciais-texto .linha-verde { width: 48px; height: 4px; background: #4ADE80; border-radius: 2px; margin: 16px 0 20px; }
+    .diferenciais-texto p { color: #6B7280; font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
+    .dif-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .dif-item { text-align: center; }
+    .dif-item .dif-icon { font-size: 28px; margin-bottom: 8px; }
+    .dif-item h4 { font-size: 13px; font-weight: 700; color: #111827; margin: 0 0 4px; }
+    .dif-item p { font-size: 12px; color: #6B7280; margin: 0; }
+ 
+    /* ── CTA FINAL ── */
+    .cta-final {
+      background: linear-gradient(to right, #3B82F6, #4ADE80);
+      padding: 48px 0;
+    }
+    .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+    .cta-inner .pata-icon { font-size: 48px; }
+    .cta-texto { flex: 1; }
+    .cta-texto h2 { color: #fff; font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+    .cta-texto p { color: rgba(255,255,255,0.85); font-size: 14px; margin: 0; }
+    .btn-cta-branco {
+      background: #fff; color: #3B82F6;
+      padding: 14px 28px; border-radius: 9999px;
+      font-weight: 700; font-size: 15px;
+      border: none; cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-cta-branco:hover { background: #F0FDF4; }
+ 
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .diferenciais-inner { grid-template-columns: 1fr; }
+      .proof-bar { flex-wrap: wrap; }
+      .dif-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+ 
+  <!-- HERO -->
+  <section class="servico-hero">
+    <div class="container">
+      <p class="breadcrumb">
+        <a href="../index.html">Início</a> › <a href="index.html#services">Nossos serviços</a> › Banho e Tosa
+      </p>
+      <div class="hero-inner">
+        <div class="hero-left">
+          <h1>Banho e Tosa</h1>
+          <p class="subtitulo">Higiene, beleza e bem-estar para o seu melhor amigo.</p>
+          <div class="linha-verde"></div>
+          <p class="descricao">Cuidamos do seu pet com todo carinho e produtos premium, garantindo limpeza, conforto e uma experiência tranquila e segura.</p>
+          <div class="hero-icons">
+            <div class="hero-icon-item">
+              <div class="icone-circulo">🧴</div>
+              <span>Produtos Premium</span>
+            </div>
+            <div class="hero-icon-item">
+              <div class="icone-circulo">❤️</div>
+              <span>Profissionais Qualificados</span>
+            </div>
+            <div class="hero-icon-item">
+              <div class="icone-circulo">🛡️</div>
+              <span>Ambiente Seguro</span>
+            </div>
+            <div class="hero-icon-item">
+              <div class="icone-circulo">🐾</div>
+              <span>Muito amor e carinho</span>
+            </div>
+          </div>
+          <button class="btn-cta-branco" onclick="location.href='agendamento.html'">📅 Agendar agora</button>
+        </div>
+        <div class="hero-right">
+          <img src="images/banhoetosa.jpeg" alt="Banho e Tosa PetCare">
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- PROOF BAR -->
+  <section style="background:#F9FAFB; padding: 0 0 0 0;">
+    <div class="container">
+      <div class="proof-bar">
+        <div class="pata">🐾</div>
+        <div class="proof-texto">
+          <strong>Cuidados que eles sentem, confiança que você vê.</strong>
+          <span>Seu pet em boas mãos sempre</span>
+        </div>
+        <div class="proof-avatares">
+          <div class="av">AM</div>
+          <div class="av" style="background:#BBF7D0;color:#166534;">LC</div>
+          <div class="av" style="background:#BFDBFE;color:#1D4ED8;">RF</div>
+          <div class="av" style="background:#FEF3C7;color:#92400E;">+</div>
+        </div>
+        <div class="nota">4,9</div>
+        <div>
+          <div class="estrelas">★★★★★</div>
+          <div class="clientes">+500 clientes satisfeitos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- COMO FUNCIONA -->
+  <section class="como-funciona">
+    <div class="container">
+      <div class="section-label">Como funciona</div>
+      <h2>Um cuidado completo para deixar seu pet ainda mais feliz.</h2>
+      <div class="linha-verde-centro"></div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num azul">1</div>
+          <div class="step-icon">📅</div>
+          <h3>Agendamento</h3>
+          <p>Escolha o melhor dia e horário para o seu pet.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num verde">2</div>
+          <div class="step-icon">🛁</div>
+          <h3>Banho e Tosa</h3>
+          <p>Higiene completa com produtos de qualidade e muito carinho.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num roxo">3</div>
+          <div class="step-icon">💨</div>
+          <h3>Secagem e Finalização</h3>
+          <p>Cuidado especial para o conforto e bem-estar do seu pet.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num laranja">4</div>
+          <div class="step-icon">🐶</div>
+          <h3>Seu pet renovado</h3>
+          <p>Saudável, cheiroso e ainda mais feliz para curtir cada momento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- DIFERENCIAIS -->
+  <section class="diferenciais">
+    <div class="container">
+      <div class="diferenciais-inner">
+        <img src="images/tosa.jpeg" alt="Gatinho sendo penteado">
+        <div class="diferenciais-texto">
+          <h2>Mais do que estética, é cuidado e bem-estar.</h2>
+          <div class="linha-verde"></div>
+          <p>Utilizamos produtos premium específicos para cada tipo de pelagem e pele, respeitando as necessidades do seu pet. Nosso ambiente é climatizado, seguro e preparado para oferecer uma experiência tranquila e positiva.</p>
+          <div class="dif-grid">
+            <div class="dif-item">
+              <div class="dif-icon">🌿</div>
+              <h4>Produtos seguros</h4>
+              <p>Fórmulas suaves e de alta qualidade.</p>
+            </div>
+            <div class="dif-item">
+              <div class="dif-icon">❄️</div>
+              <h4>Ambiente climatizado</h4>
+              <p>Conforto térmico para todas as estações.</p>
+            </div>
+            <div class="dif-item">
+              <div class="dif-icon">❤️</div>
+              <h4>Sem estresse</h4>
+              <p>Técnicas que respeitam o tempo do seu pet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- CTA FINAL -->
+  <section class="cta-final">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="pata-icon">🐾</div>
+        <div class="cta-texto">
+          <h2>Seu pet merece o melhor!</h2>
+          <p>Agende agora e proporcione uma experiência incrível.</p>
+        </div>
+        <button class="btn-cta-branco" onclick="location.href='agendamento.html'">📅 Agendar agora</button>
+      </div>
+    </div>
+  </section>
+ 
+  <script src="js/storage.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+ 

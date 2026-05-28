@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Pagamento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="pagamento.css">
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header class="topo">
+        <div class="topo-conteudo">
+            <div class="logo">
+                <span class="logo-icon">🐾</span>
+                <h2>PetCare</h2>
+            </div>
+            <p><i class="fa-solid fa-lock" style="font-size:12px;"></i> Checkout seguro</p>
+        </div>
+    </header>
+
+    <!-- Passos do checkout -->
+    <section class="passos">
+        <div class="passo concluido">
+            <span>✓</span>
+            <p>Identificação</p>
+        </div>
+        <div class="linha concluida"></div>
+        <div class="passo concluido">
+            <span>✓</span>
+            <p>Entrega</p>
+        </div>
+        <div class="linha concluida"></div>
+        <div class="passo ativo">
+            <span>3</span>
+            <p>Pagamento</p>
+        </div>
+        <div class="linha"></div>
+        <div class="passo">
+            <span>4</span>
+            <p>Revisão</p>
+        </div>
+    </section>
+
+    <!-- Conteúdo principal -->
+    <main class="container">
+
+        <!-- Formulário de pagamento -->
+        <section class="formulario">
+            <h2>Forma de pagamento</h2>
+
+            <!-- Abas para escolher o método -->
+            <div class="abas">
+                <button class="aba ativa" onclick="trocarAba('cartao', this)">
+                    💳 Cartão de Crédito
+                </button>
+                <button class="aba" onclick="trocarAba('boleto', this)">
+                    🧾 Boleto
+                </button>
+                <button class="aba" onclick="trocarAba('pix', this)">
+                    📱 PIX
+                </button>
+            </div>
+
+            <!-- Painel: Cartão de Crédito -->
+            <div id="painel-cartao" class="painel ativo">
+
+                <div class="campo">
+                    <label>Número do cartão</label>
+                    <input type="text" id="numero-cartao" placeholder="0000 0000 0000 0000"
+                           maxlength="19" oninput="formatarCartao(this)">
+                </div>
+
+                <div class="campo">
+                    <label>Nome no cartão</label>
+                    <input type="text" placeholder="COMO ESTÁ NO CARTÃO">
+                </div>
+
+                <div class="linha-dupla">
+                    <div class="campo">
+                        <label>Validade</label>
+                        <input type="text" placeholder="MM/AA" maxlength="5"
+                               oninput="formatarValidade(this)">
+                    </div>
+                    <div class="campo">
+                        <label>CVV</label>
+                        <input type="text" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+
+                <div class="campo">
+                    <label>Parcelas</label>
+                    <select>
+                        <option>1x de R$ 19,90 sem juros</option>
+                        <option>2x de R$ 9,95 sem juros</option>
+                        <option>3x de R$ 6,63 sem juros</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Painel: PIX -->
+            <div id="painel-pix" class="painel">
+
+                <p style="margin-bottom: 12px;">Escolha como quer pagar com PIX:</p>
+
+                <div class="opcoes-pix">
+                    <button class="opcao-pix ativa" onclick="trocarPix('cpf', this)">CPF</button>
+                    <button class="opcao-pix" onclick="trocarPix('telefone', this)">Telefone</button>
+                    <button class="opcao-pix" onclick="trocarPix('email', this)">E-mail</button>
+                </div>
+
+                <div class="campo">
+                    <label id="pix-label">CPF</label>
+                    <input type="text" id="pix-input" placeholder="000.000.000-00"
+                           maxlength="14" oninput="mascaraPix(this)">
+                </div>
+
+                <p class="aviso-info">Após confirmar, você recebe o QR Code para pagamento.</p>
+
+            </div>
+
+            <!-- Painel: Boleto -->
+            <div id="painel-boleto" class="painel">
+
+                <div class="boleto-box">
+                    <p>🧾</p>
+                    <h3>Boleto Bancário</h3>
+                    <p>Vencimento em <strong>3 dias úteis</strong>. Confirmação em até <strong>2 dias úteis</strong>.</p>
+
+                    <div class="codigo-boleto" id="codigo-boleto">
+                        34191.79001 01043.510047 91020.150008 1 00000001990
+                    </div>
+
+                    <button class="btn-copiar" onclick="copiarCodigo()">📋 Copiar código</button>
+                </div>
+
+                <p class="aviso-alerta">⚠️ Não pague boletos com valor diferente de R$ 19,90.</p>
+
+            </div>
+
+            <!-- Botões de navegação -->
+            <div class="botoes">
+                <a href="entrega.html" class="btn-voltar">‹ Voltar</a>
+                <button class="btn-continuar" onclick="salvarEAvancar()">Continuar ›</button>
+            </div>
+
+        </section>
+
+        <!-- Resumo do pedido -->
+        <aside class="resumo">
+            <h2>Resumo</h2>
+            <div class="linha-resumo">
+                <span>Subtotal</span>
+                <span>R$ 0,00</span>
+            </div>
+            <div class="linha-resumo">
+                <span>Frete</span>
+                <span>R$ 19,90</span>
+            </div>
+            <div class="linha-resumo total">
+                <span>Total</span>
+                <span class="preco-total">R$ 19,90</span>
+            </div>
+            <small>Dados protegidos por criptografia SSL.</small>
+        </aside>
+
+    </main>
+
+    <script src="pagamento.js"></script>
+
+</body>
+</html>

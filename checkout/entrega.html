@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega - PetCare</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="checkout.css">
+</head>
+
+<body>
+    <header class="topo">
+        <div class="topo-conteudo">
+            <div class="logo">
+                <span class="logo-icon">🐾</span>
+                <h2>PetCare</h2>
+            </div>
+            <p>Checkout seguro</p>
+        </div>
+    </header>
+
+    <section class="passos">
+        <div class="passo concluido">
+            <span style="background: #4ADE80; color: white;">✓</span>
+            <p>Identificação</p>
+        </div>
+
+        <div class="linha concluida"></div>
+
+        <div class="passo ativo">
+            <span>2</span>
+            <p>Entrega</p>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>3</span>
+            <p>Pagamento</p>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>4</span>
+            <p>Revisão</p>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <section class="formulario">
+            <h2>Endereço de entrega</h2>
+
+            <label>CEP *</label>
+            <input type="text" id="cep" placeholder="00000-000">
+
+            <label>Rua *</label>
+            <input type="text" id="rua" placeholder="Nome da rua">
+
+            <div class="linha-inputs">
+                <div>
+                    <label>Número *</label>
+                    <input type="text" id="numero" placeholder="123">
+                </div>
+                <div>
+                    <label>Complemento</label>
+                    <input type="text" id="complemento" placeholder="Apto, bloco...">
+                </div>
+            </div>
+
+            <div class="linha-inputs">
+                <div>
+                    <label>Bairro *</label>
+                    <input type="text" id="bairro" placeholder="Seu bairro">
+                </div>
+                <div>
+                    <label>Cidade *</label>
+                    <input type="text" id="cidade" placeholder="Sua cidade">
+                </div>
+            </div>
+
+            <label>Estado *</label>
+            <input type="text" id="estado" placeholder="Seu estado">
+
+            <div class="botoes">
+                <button class="btn-voltar" type="button" onclick="window.location.href='checkout.html'">
+                    &lt; Voltar
+                </button>
+
+                <button class="btn-continuar" type="button" id="btn-ir-para-pagamento"
+                    onclick="window.location.href='pagamento.html'">
+                    Continuar &gt;
+                </button>
+            </div>
+        </section>
+
+        <aside class="resumo">
+            <h2>Resumo</h2>
+
+            <div class="linha-resumo">
+                <p>Subtotal</p>
+                <span id="resumo-subtotal">R$ 0,00</span>
+            </div>
+
+            <div class="linha-resumo">
+                <p>Frete</p>
+                <span id="resumo-frete">R$ 19,90</span>
+            </div>
+
+            <div class="linha-resumo total">
+                <p>Total</p>
+                <span id="resumo-total">R$ 19,90</span>
+            </div>
+
+            <small>
+                Dados protegidos por criptografia SSL.
+            </small>
+        </aside>
+
+    </main>
+
+    <script src="../js/storage.js"></script>
+    <script src="entrega.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos — PetCare</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    main {
+      background: var(--bg-page);
+      padding: 48px 0;
+      min-height: 60vh;
+    }
+
+    /* ── TOOLBAR ─────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-wrap .icone {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      pointer-events: none;
+      color: var(--gray-400);
+    }
+
+    #busca {
+      width: 100%;
+      padding: 10px 14px 10px 40px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-pill);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      background: var(--bg-white);
+      transition: border-color .2s;
+    }
+
+    #busca:focus {
+      border-color: var(--blue);
+    }
+
+    #ordenacao {
+      padding: 10px 16px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-pill);
+      font-family: var(--font);
+      font-size: 14px;
+      background: var(--bg-white);
+      outline: none;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    #ordenacao:focus {
+      border-color: var(--blue);
+    }
+
+    /* Toggle grid / lista */
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-white);
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+    }
+
+    .btn-view {
+      background: none;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .18s, color .18s;
+    }
+
+    .btn-view.ativo {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    /* Contador */
+    .contador-resultados {
+      font-size: 14px;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+    }
+
+    .contador-resultados strong {
+      color: var(--text-primary);
+    }
+
+    /* ── GRID ────────────────────────────────────────────── */
+    #grade-produtos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    /* ── MODO LISTA ──────────────────────────────────────── */
+    #grade-produtos.lista {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    #grade-produtos.lista .card.product {
+      display: flex;
+      flex-direction: row;
+    }
+
+    #grade-produtos.lista .card.product .card-img {
+      width: 180px;
+      height: 180px;
+      aspect-ratio: unset;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    #grade-produtos.lista .card.product .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 24px;
+    }
+
+    #grade-produtos.lista .card.product h3 {
+      font-size: 17px;
+      margin-bottom: 6px;
+    }
+
+    #grade-produtos.lista .descricao-produto {
+      display: block;
+    }
+
+    /* ── CARD ────────────────────────────────────────────── */
+    .card.product {
+      position: relative;
+      transition: box-shadow .2s, transform .15s;
+    }
+
+    .card.product:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+
+
+    /* Descrição (oculta no grid, visível na lista) */
+    .descricao-produto {
+      display: none;
+      font-size: 13px;
+      color: var(--gray-600);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    /* Botões do card */
+    .card-acoes {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .card-acoes .btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .btn.outline-green {
+      background: transparent;
+      color: var(--green-dark);
+      border: 1.5px solid var(--green-mid);
+    }
+
+    .btn.outline-green:hover {
+      background: #F0FDF4;
+    }
+
+    /* ── ESTADO VAZIO ────────────────────────────────────── */
+    .estado-vazio {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--gray-400);
+    }
+
+    .estado-vazio .icone {
+      font-size: 52px;
+      margin-bottom: 16px;
+    }
+
+    .estado-vazio p {
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    /* ── FILTROS ─────────────────────────────────────────── */
+    .filtros-wrap {
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--gray-100);
+      padding: 14px 0;
+    }
+
+    /* ── RESPONSIVO ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      #grade-produtos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      #grade-produtos {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #grade-produtos.lista .card.product {
+        flex-direction: column;
+      }
+
+      #grade-produtos.lista .card.product .card-img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4/3;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header injetado pelo main.js -->
+
+  <!-- BANNER -->
+  <section class="page-hero">
+    <div class="container">
+      <p class="breadcrumb"><a href="../index.html">Início</a> / Produtos</p>
+      <h1>Loja PetCare</h1>
+      <p>Tudo para o seu pet com o melhor preço e qualidade</p>
+    </div>
+  </section>
+
+  <!-- FILTROS POR CATEGORIA -->
+  <div class="filtros-wrap">
+    <div class="container">
+      <div class="filters">
+        <button class="filter-btn active" data-cat="todos">Todos</button>
+        <button class="filter-btn" data-cat="alimentacao">🥣 Alimentação</button>
+        <button class="filter-btn" data-cat="brinquedos">🎾 Brinquedos</button>
+        <button class="filter-btn" data-cat="acessorios">🎀 Acessórios</button>
+        <button class="filter-btn" data-cat="higiene">🛁 Higiene</button>
+        <button class="filter-btn" data-cat="saude">💊 Saúde</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <main>
+    <div class="container">
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="icone">🔍</span>
+          <input type="text" id="busca" placeholder="Buscar produtos...">
+        </div>
+
+        <select id="ordenacao">
+          <option value="padrao">Ordenar por</option>
+          <option value="preco-asc">Menor preço</option>
+          <option value="preco-desc">Maior preço</option>
+          <option value="nome-asc">Nome A–Z</option>
+          <option value="nome-desc">Nome Z–A</option>
+        </select>
+
+        <div class="view-toggle">
+          <button class="btn-view ativo" id="btn-grid" title="Grade">⊞</button>
+          <button class="btn-view" id="btn-lista" title="Lista">☰</button>
+        </div>
+      </div>
+
+      <!-- CONTADOR -->
+      <p class="contador-resultados" id="contador-resultados"></p>
+
+      <!-- GRADE DE PRODUTOS -->
+      <div id="grade-produtos"></div>
+
+    </div>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+
+    const KEY_PRODUTOS = 'petcare_produtos';
+    const KEY_CARRINHO = 'petcare_carrinho';
+
+    const CAT_LABEL = {
+      alimentacao: 'Alimentação',
+      brinquedos: 'Brinquedos',
+      acessorios: 'Acessórios',
+      higiene: 'Higiene',
+      saude: 'Saúde',
+    };
+
+    /* ── ESTADO ─────────────────────────────────────────────── */
+    let catAtiva = 'todos';
+    let termoBusca = '';
+    let ordenacao = 'padrao';
+    let modoView = 'grid';   // 'grid' | 'lista'
+
+    /* ── FILTRAR E ORDENAR ──────────────────────────────────── */
+    function getProdutosFiltrados() {
+      let lista = Storage.getList(KEY_PRODUTOS);
+
+      /* Filtro por categoria */
+      if (catAtiva !== 'todos') {
+        lista = lista.filter(p => p.cat === catAtiva);
+      }
+
+      /* Filtro por busca */
+      if (termoBusca) {
+        lista = lista.filter(p =>
+          p.nome.toLowerCase().includes(termoBusca.toLowerCase()) ||
+          (p.descricao || '').toLowerCase().includes(termoBusca.toLowerCase())
+        );
+      }
+
+      /* Ordenação */
+      if (ordenacao === 'preco-asc') lista.sort((a, b) => a.preco - b.preco);
+      if (ordenacao === 'preco-desc') lista.sort((a, b) => b.preco - a.preco);
+      if (ordenacao === 'nome-asc') lista.sort((a, b) => a.nome.localeCompare(b.nome));
+      if (ordenacao === 'nome-desc') lista.sort((a, b) => b.nome.localeCompare(a.nome));
+
+      return lista;
+    }
+
+    /* ── RENDERIZAR PRODUTOS ────────────────────────────────── */
+    function renderizar() {
+      const lista = getProdutosFiltrados();
+      const grade = document.getElementById('grade-produtos');
+      const contador = document.getElementById('contador-resultados');
+
+      /* Atualiza modo de visualização */
+      grade.className = modoView === 'lista' ? 'lista' : '';
+
+      /* Atualiza contador */
+      const total = lista.length;
+      contador.innerHTML = total === 0
+        ? 'Nenhum produto encontrado'
+        : `<strong>${total}</strong> produto${total !== 1 ? 's' : ''} encontrado${total !== 1 ? 's' : ''}`;
+
+      /* Estado vazio */
+      if (!lista.length) {
+        grade.innerHTML = `
+      <div class="estado-vazio">
+        <div class="icone">🐾</div>
+        <p>Nenhum produto encontrado para este filtro.</p>
+        <button class="btn outline" onclick="limparFiltros()">Limpar filtros</button>
+      </div>`;
+        return;
+      }
+
+      /* Renderiza cada card - CARD INTEIRO CLICÁVEL */
+      grade.innerHTML = lista.map(p => {
+        const preco = Number(p.preco).toFixed(2).replace('.', ',');
+        const imgSrc = resolveImg(p.img);
+        const badge = CAT_LABEL[p.cat] || p.cat;
+        const descr = p.descricao || '';
+
+        return `
+      <div class="card product" style="cursor: pointer;" onclick="irParaDetalhe(${p.id})">
+        <img src="${imgSrc}" alt="${p.nome}" class="card-img"
+             onerror="this.src='../images/produto1.png'">
+
+        <div class="card-body">
+          <span class="badge">${badge}</span>
+          <h3>${p.nome}</h3>
+
+          <!-- Descrição: aparece só no modo lista -->
+          ${descr ? `<p class="descricao-produto">${descr}</p>` : ''}
+
+          <div class="price">R$ ${preco}</div>
+
+          <div class="card-acoes">
+            <button class="btn primary" onclick="event.stopPropagation(); adicionarCarrinho(${p.id})">
+              🛒 Adicionar ao carrinho
+            </button>
+          </div>
+        </div>
+      </div>`;
+      }).join('');
+    }
+
+    function irParaDetalhe(id) {
+      window.location.href = `produto-detalhe.html?id=${id}`;
+    }
+
+
+    /* ── CARRINHO ────────────────────────────────────────────── */
+    function adicionarCarrinho(id) {
+      const produto = Storage.findInList(KEY_PRODUTOS, id);
+      if (!produto) return;
+
+      const carrinho = Storage.getList(KEY_CARRINHO);
+      const existe = carrinho.find(i => i.id === produto.id);
+
+      if (existe) {
+        Storage.updateInList(KEY_CARRINHO, produto.id, { qtd: (existe.qtd || 1) + 1 });
+      } else {
+        Storage.addToList(KEY_CARRINHO, {
+          id: produto.id,
+          nome: produto.nome,
+          preco: produto.preco,
+          img: produto.img,
+          qtd: 1,
+        });
+      }
+
+      updateCartBadge();
+      mostrarToast(`"${produto.nome}" adicionado ao carrinho! 🛒`, 'success');
+    }
+
+
+    /* ── LIMPAR FILTROS ──────────────────────────────────────── */
+    function limparFiltros() {
+      catAtiva = 'todos';
+      termoBusca = '';
+      ordenacao = 'padrao';
+
+      document.getElementById('busca').value = '';
+      document.getElementById('ordenacao').value = 'padrao';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-cat="todos"]').classList.add('active');
+
+      renderizar();
+    }
+
+    /* ── EVENTOS ─────────────────────────────────────────────── */
+
+    /* Busca em tempo real */
+    document.getElementById('busca').addEventListener('input', function () {
+      termoBusca = this.value;
+      renderizar();
+    });
+
+    /* Ordenação */
+    document.getElementById('ordenacao').addEventListener('change', function () {
+      ordenacao = this.value;
+      renderizar();
+    });
+
+    /* Filtros de categoria */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        catAtiva = this.dataset.cat;
+        renderizar();
+      });
+    });
+
+    /* Toggle grid / lista */
+    document.getElementById('btn-grid').addEventListener('click', function () {
+      modoView = 'grid';
+      this.classList.add('ativo');
+      document.getElementById('btn-lista').classList.remove('ativo');
+      renderizar();
+    });
+
+    document.getElementById('btn-lista').addEventListener('click', function () {
+      modoView = 'lista';
+      this.classList.add('ativo');
+      document.getElementById('btn-grid').classList.remove('ativo');
+      renderizar();
+    });
+
+    function resolveImg(src) {
+      if (!src) return '../images/produto1.png';
+      if (src.startsWith('http') || src.startsWith('../') || src.startsWith('/')) return src;
+      return '../' + src;
+    }
+
+    /* ── INIT ────────────────────────────────────────────────── */
+    renderizar();
+
+  </script>
+</body>
+
+</html>

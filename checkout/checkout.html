@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - PetCare</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+    <!-- CAbeçalho do site -->
+    <header class ="topo">
+
+        <div class="topo-conteudo">
+
+        <div class="logo">
+
+            <span class="logo-icon">🐾</span>
+
+            <h2>PetCare</h2>
+
+        </div>
+
+        <p>Checkout seguro</p>
+
+    </div></header>
+
+    <!-- Bolinhas de etapas do checkout -->
+    <section class="passos">
+        <div class="passo ativo">
+            <span>1</span>
+            <p>Identificação</p>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>2</span>
+            <p>Entrega</p>
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>3</span>
+            <p>Pagamento</p>
+
+        </div>
+
+        <div class="linha"></div>
+
+        <div class="passo">
+            <span>4</span>
+            <p>Revisão</p>
+        </div>
+
+    </section>
+
+    <!-- Criação do container do checkout -->
+    <main class="container">
+
+        <!-- Formulário de identificação do cliente -->
+        <section class="formulario">
+            <h2>Seus dados</h2>
+
+            <label>Nome completo *</label>
+            <input type="text" id="nome" placeholder="Digite seu nome completo">
+
+            <!-- input é a caixa de texto onde o cliente irá digitar suas informações -->
+
+            <!-- type="text" indica que é um campo de texto, e placeholder é o texto que 
+            aparece dentro da caixa antes do cliente digitar -->
+
+            <!-- placeholder é uma dica para o cliente sobre o que deve ser preenchido no campo -->
+
+            <!-- label é o texto que aparece acima do campo de input -->
+
+            <!-- asterisco (*) indica que o campo é obrigatório -->
+
+           <div class="linha-inputs">
+                <div>
+                    <label>E-mail *</label>
+                    <input type="email" id="email" placeholder="seu@email.com">
+                </div>
+
+                <div>
+                    <label>CPF *</label>
+                    <input type="text" id="cpf" placeholder="000.000.000-00">
+                </div>
+            </div>
+
+            <label>Telefone</label>
+            <input type="text" id="telefone" placeholder="(00) 90000-0000">
+
+            <div class="botoes">
+                <button class="btn-voltar" type="button" onclick="window.location.href='carrinho.html'">
+                    &lt; Voltar ao carrinho
+                </button>
+
+                <button class="btn-continuar" type="button" onclick="avancarParaEntrega()">
+                    Continuar &gt;
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- Resumo do pedido -->
+
+        <aside class="resumo">
+
+            <h2>Resumo</h2>
+
+                <div class="linha-resumo">
+                <p>Subtotal</p>
+                <span id="resumo-subtotal">R$ 0,00</span>
+            </div>
+
+            <div class="linha-resumo">
+                <p>Frete</p>
+                <span id="resumo-frete">R$ 19,90</span>
+            </div>
+
+            <div class="linha-resumo total">
+                <p>Total</p>
+                <span id="resumo-total">R$ 19,90</span>
+            </div>
+
+                <small>
+                    Dados protegidos por criptografia SSL.
+                </small>
+
+                <!-- small é um elemento de texto menor, usado para informações
+                 adicionais ou legais -->
+
+        </aside>
+
+    </main>
+
+    <script src="../js/storage.js"></script>
+    <script src="checkout.js"></script>
+
+</body>
+
+</html>

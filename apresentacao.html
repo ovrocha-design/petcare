@@ -1,0 +1,1128 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação — Carrinho PetCare</title>
+    <style>
+        :root {
+            --blue:   #2563eb;
+            --green:  #16a34a;
+            --dark:   #0f172a;
+            --gray:   #1e293b;
+            --text:   #f1f5f9;
+            --accent: #38bdf8;
+            --tag:    #fbbf24;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── BARRA DE CONTROLE ──────────────────────────────────── */
+        #barra-controle {
+            background: var(--gray);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid var(--blue);
+            flex-shrink: 0;
+        }
+
+        #progresso { font-size: 0.85rem; color: var(--accent); margin-left: auto; }
+
+        .btn-ctrl {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn-ctrl:hover    { background: #1d4ed8; }
+        .btn-ctrl:disabled { opacity: 0.4; cursor: default; }
+        .btn-ctrl.verde    { background: var(--green); }
+        .btn-ctrl.verde:hover  { background: #15803d; }
+        .btn-ctrl.laranja  { background: #d97706; }
+        .btn-ctrl.laranja:hover { background: #b45309; }
+
+        /* ── BARRA DE PROGRESSO ─────────────────────────────────── */
+        #barra-progresso { height: 3px; background: var(--blue); transition: width 0.3s; flex-shrink: 0; }
+
+        /* ── ÁREA DE SLIDES ─────────────────────────────────────── */
+        #area-slide {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 36px 40px;
+            overflow: hidden;
+        }
+
+        .slide { display: none; max-width: 940px; width: 100%; animation: fadeIn 0.3s ease; }
+        .slide.ativo { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-tag {
+            display: inline-block;
+            background: var(--tag);
+            color: #1c1c1c;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 99px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .slide-titulo {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .slide-texto {
+            font-size: 1.4rem;
+            line-height: 1.9;
+            color: #cbd5e1;
+        }
+        .slide-texto strong { color: #fff; }
+        .slide-texto em     { color: var(--tag); font-style: normal; }
+
+        .codigo-ref {
+            display: inline-block;
+            background: #1e3a5f;
+            color: var(--accent);
+            font-family: 'Consolas', monospace;
+            font-size: 1rem;
+            padding: 1px 8px;
+            border-radius: 4px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .lista-pontos { list-style: none; margin-top: 14px; }
+        .lista-pontos li {
+            font-size: 1.3rem;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+            color: #cbd5e1;
+        }
+        .lista-pontos li::before { content: '▸ '; color: var(--accent); font-weight: bold; }
+
+        .badge-linha {
+            display: inline-block;
+            background: #064e3b;
+            color: #6ee7b7;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .badge-arquivo {
+            display: inline-block;
+            background: #312e81;
+            color: #a5b4fc;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* ── MODO TELEPROMPTER ──────────────────────────────────── */
+        body.teleprompter { height: auto; overflow: auto; }
+        body.teleprompter #area-slide        { display: none; }
+        body.teleprompter #area-teleprompter { display: block; }
+        body.teleprompter #barra-controle    { position: sticky; top: 0; z-index: 100; }
+
+        #area-teleprompter {
+            display: none;
+            max-width: 820px;
+            margin: 40px auto;
+            padding: 0 40px 100px;
+        }
+
+        .tp-bloco {
+            margin-bottom: 44px;
+            padding: 30px;
+            border-left: 4px solid var(--accent);
+            background: var(--gray);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .tp-tag  { font-size: 0.72rem; color: var(--tag); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .tp-ref  { font-size: 0.7rem; color: #6ee7b7; font-family: monospace; background: #064e3b; padding: 1px 6px; border-radius: 4px; margin-left: 6px; }
+        .tp-titulo { font-size: 1.45rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; }
+        .tp-texto  { font-size: 1.45rem; line-height: 2.1; color: #e2e8f0; }
+        .tp-texto strong { color: #fff; }
+        .tp-texto em     { color: var(--tag); font-style: normal; }
+
+        .tp-label { font-size: 0.78rem; color: #94a3b8; }
+        #tp-vel-valor { font-size: 0.78rem; color: var(--accent); font-weight: 700; min-width: 14px; text-align: center; }
+
+        #tp-velocidade {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 110px;
+            height: 4px;
+            border-radius: 2px;
+            background: #334155;
+            outline: none;
+            cursor: pointer;
+        }
+        #tp-velocidade::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        /* cursor indica que clique pausa/retoma */
+        body.teleprompter #area-teleprompter { cursor: pointer; user-select: none; }
+
+        /* badges clicáveis abrem VS Code na linha certa */
+        [data-vscode] { cursor: pointer; }
+        [data-vscode]:hover { opacity: 0.7; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     BARRA DE CONTROLE — não pertence a nenhum arquivo do projeto
+     ════════════════════════════════════════════════════════════ -->
+<div id="barra-controle">
+    <button class="btn-ctrl"         id="btn-anterior" onclick="navegar(-1)">← Anterior</button>
+    <button class="btn-ctrl verde"   id="btn-proximo"  onclick="navegar(1)">Próximo →</button>
+    <button class="btn-ctrl laranja" id="btn-tp"       onclick="alternarTeleprompter()">📜 Teleprompter</button>
+    <a class="btn-ctrl" href="Projeto Github Cópia/index.html" target="_blank" style="text-decoration:none;background:#6d28d9;">🌐 Abrir Site</a>
+    <a class="btn-ctrl verde" href="Projeto Github Cópia/checkout/carrinho.html" target="_blank" style="text-decoration:none;">🛒 Abrir Carrinho</a>
+    <span id="tp-inline" style="display:none; align-items:center; gap:10px;">
+        <button class="btn-ctrl verde" id="btn-play" onclick="togglePlay()">▶ Continuar</button>
+        <span class="tp-label">Velocidade</span>
+        <input type="range" id="tp-velocidade" min="1" max="10" value="3" oninput="ajustarVelocidade(this.value)">
+        <span id="tp-vel-valor">3</span>
+        <button class="btn-ctrl" onclick="scrollManual(-120)">▲</button>
+        <button class="btn-ctrl" onclick="scrollManual(120)">▼</button>
+    </span>
+    <span id="progresso">Slide 1 / 16</span>
+</div>
+<div id="barra-progresso"></div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     MODO SLIDES
+     ════════════════════════════════════════════════════════════ -->
+<div id="area-slide">
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 1 — INTRODUÇÃO
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide ativo" id="slide-1">
+        <span class="slide-tag">Introdução</span>
+        <h1 class="slide-titulo">Carrinho de Compras — PetCare</h1>
+        <p class="slide-texto">
+            Minha responsabilidade no projeto foram <strong>4 arquivos</strong>:
+        </p>
+        <ul class="lista-pontos">
+            <li><span class="badge-arquivo">carrinho.html</span> — página do carrinho, toda em JavaScript dinâmico</li>
+            <li><span class="badge-arquivo">css/carrinho.css</span> — layout, grid responsivo e todos os estilos da página</li>
+            <li><span class="badge-arquivo">js/storage.js</span> — módulo compartilhado de CRUD no localStorage</li>
+            <li><span class="badge-arquivo">js/main.js</span> — injeta header/footer, atualiza badge e exibe notificações</li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 2 — ESTRUTURA HTML
+    Vínculo: carrinho.html linhas 1–27 (head, links)
+    Vínculo: carrinho.html linhas 47–82 (.page-hero, #conteudo-carrinho)
+    Vínculo: carrinho.html linhas 105–106 (ordem dos scripts)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-2">
+        <span class="slide-tag">carrinho.html — Estrutura</span>
+        <h1 class="slide-titulo">Estrutura HTML da página</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">&lt;link&gt;</span> — carrega dois CSS em ordem:
+                primeiro <em>styles.css</em> (global do grupo), depois <em>carrinho.css</em> (específico).
+                <span class="badge-linha" data-vscode="carrinho.html:19">linhas 19 e 26</span>
+            </li>
+            <li>
+                <span class="codigo-ref">.page-hero</span> — banner com breadcrumb, título e
+                contador de produtos atualizado pelo JS. <span class="badge-linha" data-vscode="carrinho.html:47">linhas 47–66</span>
+            </li>
+            <li>
+                <span class="codigo-ref">#conteudo-carrinho</span> — div <strong>vazia no HTML</strong>;
+                o JavaScript preenche todo o conteúdo dinamicamente. <span class="badge-linha" data-vscode="carrinho.html:80">linha 80</span>
+            </li>
+            <li>
+                Ordem dos scripts é <strong>obrigatória</strong>: storage.js → main.js → nosso código.
+                Nosso JS usa <em>Storage</em> e <em>mostrarToast</em> — que só existem depois dos dois primeiros.
+                <span class="badge-linha" data-vscode="carrinho.html:105">linhas 105–106</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 3 — CSS/CARRINHO.CSS: GRID E RESPONSIVIDADE
+    Vínculo: css/carrinho.css linhas 26–36 (.carrinho-grid, @media)
+    Vínculo: css/carrinho.css linhas 14–18 (main background)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-3">
+        <span class="slide-tag">css/carrinho.css — Layout e Responsividade</span>
+        <h1 class="slide-titulo">Grid responsivo do carrinho</h1>
+        <ul class="lista-pontos">
+            <li>
+                Mobile (padrão): <span class="codigo-ref">grid-template-columns: 1fr</span>
+                — coluna única, lista de produtos em cima.
+                <span class="badge-linha" data-vscode="carrinho.css:28">linha 28</span>
+            </li>
+            <li>
+                Desktop (≥ 1024 px): <span class="codigo-ref">grid-template-columns: 2fr 1fr</span>
+                — 2/3 para os produtos, 1/3 para o resumo.
+                <span class="badge-linha" data-vscode="carrinho.css:32">linhas 32–36</span>
+            </li>
+            <li>
+                <span class="codigo-ref">main</span> tem <span class="codigo-ref">min-height: 60vh</span>
+                para empurrar o footer para baixo mesmo com carrinho vazio.
+                <span class="badge-linha" data-vscode="carrinho.css:17">linha 17</span>
+            </li>
+            <li>
+                <span class="codigo-ref">meta viewport</span> no HTML garante renderização
+                correta em celulares. <span class="badge-arquivo" data-vscode="carrinho.html:5">carrinho.html linha 5</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 4 — CSS/CARRINHO.CSS: CARDS E BOTÕES
+    Vínculo: css/carrinho.css linhas 78–201 (card, produto-item, btn-qtd, btn-remover)
+    Vínculo: css/carrinho.css linhas 207–315 (resumo-card, btn-primary, btn-outline)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-4">
+        <span class="slide-tag">css/carrinho.css — Cards e Botões</span>
+        <h1 class="slide-titulo">Estilos dos cards e controles</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">.card</span> — override do padding global (24px → 16px)
+                para cards mais compactos no carrinho. <span class="badge-linha" data-vscode="carrinho.css:78">linha 78</span>
+            </li>
+            <li>
+                <span class="codigo-ref">.produto-img</span> — imagem 100×100 px com
+                <em>object-fit: cover</em> para não distorcer. <span class="badge-linha" data-vscode="carrinho.css:91">linhas 91–97</span>
+            </li>
+            <li>
+                <span class="codigo-ref">.btn-qtd:disabled</span> — opacity 0.4 + cursor not-allowed
+                quando quantidade é 1 (o JS insere o atributo disabled). <span class="badge-linha" data-vscode="carrinho.css:159">linhas 159–163</span>
+            </li>
+            <li>
+                <span class="codigo-ref">.resumo-card</span> — <strong>sticky top: 80px</strong>
+                (considera o header de 64 px + folga) para o resumo acompanhar o scroll.
+                <span class="badge-linha" data-vscode="carrinho.css:207">linhas 207–215</span>
+            </li>
+            <li>
+                <span class="codigo-ref">.btn-primary</span> usa a variável
+                <span class="codigo-ref">var(--gradient)</span> do styles.css global.
+                <span class="badge-linha" data-vscode="carrinho.css:291">linhas 291–294</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 5 — STORAGE.JS: MÓDULO IIFE E CRUD BÁSICO
+    Vínculo: js/storage.js linhas 7–78
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-5">
+        <span class="slide-tag">js/storage.js — Módulo IIFE</span>
+        <h1 class="slide-titulo">Storage — padrão IIFE e CRUD básico</h1>
+        <p class="slide-texto">
+            O arquivo usa um <strong>IIFE</strong> (Immediately Invoked Function Expression)
+            — uma função que se executa sozinha e retorna só a API pública.
+            Isso protege as funções internas de serem acessadas de fora. <span class="badge-linha" data-vscode="storage.js:7">linhas 7–78</span>
+        </p>
+        <ul class="lista-pontos">
+            <li><span class="codigo-ref">get(key)</span> — lê e faz parse automático do JSON</li>
+            <li><span class="codigo-ref">set(key, data)</span> — serializa para JSON e salva</li>
+            <li><span class="codigo-ref">remove(key)</span> — apaga uma chave</li>
+            <li><span class="codigo-ref">clear()</span> — apaga todo o localStorage</li>
+            <li>
+                <span class="codigo-ref">_parse()</span> — função privada com try/catch
+                que converte string JSON em objeto. <span class="badge-linha" data-vscode="storage.js:10">linhas 10–13</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 6 — STORAGE.JS: HELPERS DE LISTA
+    Vínculo: js/storage.js linhas 41–74
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-6">
+        <span class="slide-tag">js/storage.js — Helpers de Lista</span>
+        <h1 class="slide-titulo">Operações sobre arrays no localStorage</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">getList(key)</span> — retorna o array ou
+                <em>[]</em> se a chave não existir. Nunca null. <span class="badge-linha" data-vscode="storage.js:41">linhas 41–44</span>
+            </li>
+            <li>
+                <span class="codigo-ref">addToList(key, item)</span> — gera ID automático
+                com <em>Date.now()</em> se o item não tiver id. <span class="badge-linha" data-vscode="storage.js:47">linhas 47–53</span>
+            </li>
+            <li>
+                <span class="codigo-ref">updateInList(key, id, newData)</span> — usa
+                <em>findIndex</em> + spread <em>{ ...list[i], ...newData }</em>
+                para atualizar só os campos enviados. <span class="badge-linha" data-vscode="storage.js:56">linhas 56–63</span>
+            </li>
+            <li>
+                <span class="codigo-ref">removeFromList(key, id)</span> — usa
+                <em>filter</em> para criar novo array sem o item. <span class="badge-linha" data-vscode="storage.js:66">linhas 66–69</span>
+            </li>
+            <li>
+                <span class="codigo-ref">findInList(key, id)</span> — retorna o item
+                pelo id ou null. <span class="badge-linha" data-vscode="storage.js:72">linhas 72–74</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 7 — MAIN.JS: HEADER, FOOTER E NAV ATIVO
+    Vínculo: js/main.js linhas 6–91
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-7">
+        <span class="slide-tag">js/main.js — Header e Footer</span>
+        <h1 class="slide-titulo">Injeção automática de header e footer</h1>
+        <p class="slide-texto">
+            O <span class="codigo-ref">DOMContentLoaded</span> dispara assim que o HTML é
+            processado (sem esperar imagens). Chama as 4 funções de inicialização.
+            <span class="badge-linha" data-vscode="main.js:6">linha 6</span>
+        </p>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">injectHeader()</span> — cria o elemento
+                <em>&lt;header&gt;</em> com logo, menu e ícone de carrinho via
+                <em>document.createElement</em> + <em>innerHTML</em> + <em>body.prepend</em>.
+                <span class="badge-linha" data-vscode="main.js:15">linhas 15–42</span>
+            </li>
+            <li>
+                <span class="codigo-ref">injectFooter()</span> — cria o
+                <em>&lt;footer&gt;</em> com grid de 4 colunas e o ano dinâmico
+                via <em>new Date().getFullYear()</em>. <span class="badge-linha" data-vscode="main.js:45">linhas 45–83</span>
+            </li>
+            <li>
+                <span class="codigo-ref">highlightActiveNav()</span> — lê
+                <em>window.location.pathname</em> e adiciona a classe
+                <em>active</em> ao link da página atual. <span class="badge-linha" data-vscode="main.js:86">linhas 86–91</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 8 — MAIN.JS: BADGE E TOAST
+    Vínculo: js/main.js linhas 94–120
+    Vínculo: carrinho.html linha 482 (mostrarToast chamado pelo carrinho)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-8">
+        <span class="slide-tag">js/main.js — Badge e Toast</span>
+        <h1 class="slide-titulo">Contador do carrinho e notificações</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">updateCartBadge()</span> — lê
+                <em>petcare_carrinho</em> do localStorage e soma as quantidades com
+                <em>reduce</em>. Exibe ou esconde o badge numérico no ícone de carrinho.
+                <span class="badge-linha" data-vscode="main.js:94">linhas 94–101</span>
+            </li>
+            <li>
+                <span class="codigo-ref">mostrarToast(msg, tipo)</span> — exibe
+                notificação no topo da tela por 3 segundos usando
+                <em>classList.add('show')</em> + <em>setTimeout</em>.
+                <span class="badge-linha" data-vscode="main.js:112">linhas 112–120</span>
+            </li>
+            <li>
+                <strong>Conexão com o carrinho:</strong> depois de remover ou limpar produtos,
+                o carrinho.html chama <span class="codigo-ref">mostrarToast('Produto removido', 'success')</span>
+                — função que vem do main.js. <span class="badge-arquivo" data-vscode="carrinho.html:493">carrinho.html linhas 482 e 507</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 9 — ÁRVORE DOM (addEventListener + getElementById)
+    Vínculo: carrinho.html linhas 128–130 (addEventListener load)
+    Vínculo: carrinho.html linhas 173–174 (getElementById)
+    Vínculo: carrinho.html linhas 190–196 (textContent)
+    Vínculo: carrinho.html linha 316 (innerHTML)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-9">
+        <span class="slide-tag">Critério: Árvore DOM</span>
+        <h1 class="slide-titulo">Manipulação do DOM no carrinho</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">window.addEventListener('load', ...)</span>
+                — espera página inteira carregar para garantir que storage.js e main.js
+                já estão prontos. <span class="badge-linha" data-vscode="carrinho.html:111">linha 128</span>
+            </li>
+            <li>
+                <span class="codigo-ref">document.getElementById('conteudo-carrinho')</span>
+                — seleciona a div onde os produtos serão inseridos. <span class="badge-linha" data-vscode="carrinho.html:136">linha 173</span>
+            </li>
+            <li>
+                <span class="codigo-ref">contador.textContent</span>
+                — atualiza o texto do banner com a contagem de produtos. <span class="badge-linha" data-vscode="carrinho.html:136">linhas 190–196</span>
+            </li>
+            <li>
+                <span class="codigo-ref">conteudo.innerHTML = html</span>
+                — insere o HTML completo montado com todos os produtos. <span class="badge-linha" data-vscode="carrinho.html:136">linha 316</span>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 10 — LOCALSTORAGE (como o carrinho usa o Storage)
+    Vínculo: carrinho.html linha 166 (getList)
+    Vínculo: carrinho.html linha 455 (updateInList)
+    Vínculo: carrinho.html linha 479 (removeFromList)
+    Vínculo: carrinho.html linha 505 (remove)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-10">
+        <span class="slide-tag">Critério: localStorage</span>
+        <h1 class="slide-titulo">Como o carrinho usa o Storage</h1>
+        <p class="slide-texto">Chave usada: <span class="codigo-ref">petcare_carrinho</span> — array de <span class="codigo-ref">&#123; id, nome, preco, img, qtd &#125;</span></p>
+        <ul class="lista-pontos">
+            <li><span class="codigo-ref">Storage.getList</span> — lê o array ao carregar a página <span class="badge-linha" data-vscode="carrinho.html:136">linha 166</span></li>
+            <li><span class="codigo-ref">Storage.updateInList(..., &#123; qtd &#125;)</span> — salva a nova quantidade <span class="badge-linha" data-vscode="carrinho.html:449">linha 455</span></li>
+            <li><span class="codigo-ref">Storage.removeFromList(..., id)</span> — remove um produto <span class="badge-linha" data-vscode="carrinho.html:493">linha 479</span></li>
+            <li><span class="codigo-ref">Storage.remove('petcare_carrinho')</span> — limpa tudo de uma vez <span class="badge-linha" data-vscode="carrinho.html:520">linha 505</span></li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 11 — renderizarCarrinho (função principal)
+    Vínculo: carrinho.html linhas 155–317
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-11">
+        <span class="slide-tag">Carrinho — Função Principal</span>
+        <h1 class="slide-titulo">renderizarCarrinho()</h1>
+        <p class="slide-texto">
+            Função central — chamada toda vez que algo muda. <span class="badge-linha" data-vscode="carrinho.html:136">linhas 155–317</span>
+        </p>
+        <ul class="lista-pontos">
+            <li>Lê array do localStorage com <em>getList</em></li>
+            <li>Atualiza contador no banner via <em>if / else if / else</em> + template literal</li>
+            <li>Se vazio → exibe card "carrinho vazio" e encerra com <em>return</em></li>
+            <li>Calcula subtotal, frete com <strong>ternário</strong> (≥ R$200 → grátis) e total</li>
+            <li>Monta HTML com <em>forEach</em> e insere via <em>innerHTML</em></li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 12 — forEach + montarHtmlProduto + ternário
+    Vínculo: carrinho.html linhas 258–260 (forEach)
+    Vínculo: carrinho.html linhas 343–384 (montarHtmlProduto)
+    Vínculo: carrinho.html linha 365 (ternário disabled)
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-12">
+        <span class="slide-tag">Aula 6 — forEach / Template Literal / Ternário</span>
+        <h1 class="slide-titulo">forEach + montarHtmlProduto()</h1>
+        <p class="slide-texto">
+            Para cada produto, <span class="codigo-ref">forEach</span> chama
+            <span class="codigo-ref">montarHtmlProduto(produto)</span>
+            que retorna o HTML do card usando <strong>template literal</strong>
+            (crases + <span class="codigo-ref">${variável}</span>).
+            <span class="badge-linha" data-vscode="carrinho.html:136">linhas 258–260 e 362–404</span>
+            <br><br>
+            Botão <em>−</em> recebe <span class="codigo-ref">disabled</span>
+            via ternário quando qtd = 1 — sem possibilidade de ir a zero.
+            <span class="badge-linha" data-vscode="carrinho.html:326">linha 384</span>
+            <br><br>
+            <span class="codigo-ref">resolveImg(src)</span> — função auxiliar que corrige o
+            caminho das imagens: como o arquivo ficou dentro de <em>checkout/</em>,
+            adiciona <em>../</em> automaticamente se necessário.
+            <span class="badge-linha" data-vscode="carrinho.html:350">linhas 343–357</span>
+        </p>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 13 — reduce: calcularSubtotal
+    Vínculo: carrinho.html linhas 412–417
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-13">
+        <span class="slide-tag">Aula 6 — reduce()</span>
+        <h1 class="slide-titulo">calcularSubtotal() — método reduce</h1>
+        <p class="slide-texto">
+            <span class="codigo-ref">array.reduce((acum, item) =&gt; acum + (item.preco * item.qtd), 0)</span>
+            <span class="badge-linha" data-vscode="carrinho.html:415">linhas 430–435</span>
+        </p>
+        <ul class="lista-pontos">
+            <li>Começa com acumulador <em>0</em></li>
+            <li>Produto A: R$50 × 2 = 100 → acumulador = <em>100</em></li>
+            <li>Produto B: R$30 × 1 = 30 → acumulador = <em>130</em></li>
+            <li>Produto C: R$20 × 3 = 60 → acumulador = <em>190</em> ← resultado final</li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 14 — alterarQuantidade + Math.max
+    Vínculo: carrinho.html linhas 441–459
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-14">
+        <span class="slide-tag">Aula 6 — Math.max / find</span>
+        <h1 class="slide-titulo">alterarQuantidade(id, delta)</h1>
+        <p class="slide-texto">
+            Delta = <em>+1</em> ou <em>−1</em>. <span class="badge-linha" data-vscode="carrinho.html:449">linhas 459–477</span><br><br>
+            <span class="codigo-ref">Math.max(1, item.qtd + delta)</span> garante que a
+            quantidade <strong>nunca fique abaixo de 1</strong>.<br><br>
+            Exemplo: qtd = 1, clica −<br>
+            <span class="codigo-ref">Math.max(1, 0) = 1</span>
+        </p>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 15 — removerProduto + limparCarrinho
+    Vínculo: carrinho.html linhas 477–509
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-15">
+        <span class="slide-tag">Aula 6/7 — confirm() / localStorage</span>
+        <h1 class="slide-titulo">removerProduto() e limparCarrinho()</h1>
+        <ul class="lista-pontos">
+            <li>
+                <span class="codigo-ref">window.confirm()</span> — caixa nativa OK/Cancelar
+                antes de remover. Evita remoção acidental. <span class="badge-linha" data-vscode="carrinho.html:493">linha 496</span>
+            </li>
+            <li>
+                <span class="codigo-ref">Storage.removeFromList(..., id)</span> — remove
+                <strong>um</strong> produto pelo ID. <span class="badge-linha" data-vscode="carrinho.html:493">linha 497</span>
+            </li>
+            <li>
+                <span class="codigo-ref">Storage.remove('petcare_carrinho')</span> — apaga
+                a chave <strong>inteira</strong> (mais eficiente que item por item).
+                <span class="badge-linha" data-vscode="carrinho.html:520">linha 523</span>
+            </li>
+            <li>
+                Ambas chamam <span class="codigo-ref">mostrarToast()</span> do main.js
+                para confirmar a ação com notificação verde.
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 16 — ENCERRAMENTO
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-16">
+        <span class="slide-tag">Conclusão</span>
+        <h1 class="slide-titulo">Resumo dos meus 4 arquivos</h1>
+        <ul class="lista-pontos">
+            <li><strong>storage.js</strong> — módulo IIFE, CRUD + helpers de lista para o localStorage</li>
+            <li><strong>main.js</strong> — header/footer injetados, badge do carrinho, toast de notificação</li>
+            <li><strong>carrinho.css</strong> — grid responsivo (1fr / 2fr+1fr), cards, resumo sticky</li>
+            <li><strong>carrinho.html</strong> — DOM dinâmico, localStorage, forEach, reduce, ternário, Math.max, confirm</li>
+        </ul>
+    </div>
+
+    <!--
+    ────────────────────────────────────────────────────────────
+    SLIDE 17 — FLUXO E CONEXÕES DO PROJETO
+    ────────────────────────────────────────────────────────────
+    -->
+    <div class="slide" id="slide-17">
+        <span class="slide-tag">Fluxo do Projeto</span>
+        <h1 class="slide-titulo" style="font-size:1.7rem;margin-bottom:10px;">Como as páginas se conectam ao Carrinho</h1>
+
+        <div style="display:grid;grid-template-columns:1fr 36px 1.3fr 36px 1fr;align-items:center;justify-items:stretch;gap:6px;">
+
+            <!-- ESQUERDA: main.js + serviços -->
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="background:#1c1917;border:2px solid #f59e0b;border-radius:14px;padding:14px;text-align:center;">
+                    <div style="font-size:1.15rem;font-weight:700;color:#fbbf24;margin-bottom:8px;">⚙️ main.js</div>
+                    <div style="font-size:0.95rem;color:#d97706;line-height:1.7;">
+                        Injeta header em<br>todas as páginas<br>
+                        <hr style="border-color:#44403c;margin:6px 0;">
+                        <code style="font-size:0.82rem;color:#6ee7b7;">updateCartBadge()</code><br>
+                        lê <em style="color:#fbbf24;">petcare_carrinho</em><br>
+                        e atualiza o 🛒 badge<br>
+                        <hr style="border-color:#44403c;margin:6px 0;">
+                        <code style="font-size:0.82rem;color:#6ee7b7;">mostrarToast()</code><br>
+                        chamado por index.html<br>e pelo carrinho
+                    </div>
+                </div>
+                <div style="background:#1e1b4b;border:1px solid #818cf8;border-radius:10px;padding:10px 14px;text-align:center;">
+                    <div style="font-size:0.95rem;font-weight:700;color:#a5b4fc;margin-bottom:4px;">🐾 Serviços — Nicolle</div>
+                    <div style="font-size:0.8rem;color:#c7d2fe;line-height:1.6;">
+                        banho.html<br>hotel.html<br>veterinario.html<br>
+                        <span style="font-size:0.72rem;color:#6366f1;">links ativos no footer via main.js</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETA ↔ esquerda -->
+            <div style="text-align:center;font-size:1.8rem;color:#475569;line-height:1;">↔</div>
+
+            <!-- CENTRO: fluxo vertical principal -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+
+                <!-- index.html + produtos.html -->
+                <div style="background:#1e3a5f;border:1px solid #334155;border-radius:12px;padding:11px 14px;text-align:center;width:100%;">
+                    <div style="font-size:1.0rem;font-weight:700;color:#93c5fd;margin-bottom:3px;">🏠 index.html · 🛍️ produtos/produtos.html</div>
+                    <div style="font-size:0.85rem;color:#94a3b8;">Cliente clica "Comprar" →<br><code style="font-size:0.75rem;color:#6ee7b7;">addCart()</code> chama <em style="color:#fbbf24;">Storage</em> + <em style="color:#fbbf24;">mostrarToast</em></div>
+                </div>
+
+                <!-- seta ↓ com comando -->
+                <div style="text-align:center;line-height:1.3;">
+                    <div style="font-size:1.4rem;color:#6ee7b7;">↓</div>
+                    <code style="font-size:0.75rem;color:#6ee7b7;background:#064e3b;padding:2px 6px;border-radius:4px;">Storage.addToList('petcare_carrinho', produto)</code>
+                </div>
+
+                <!-- CARRINHO — destaque central -->
+                <div style="background:linear-gradient(135deg,#1d4ed8,#047857);border:3px solid #38bdf8;border-radius:16px;padding:15px 18px;text-align:center;width:100%;box-shadow:0 0 28px rgba(56,189,248,0.35);">
+                    <div style="font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:3px;">🛒 carrinho.html</div>
+                    <div style="font-size:0.88rem;color:#bfdbfe;">★ MINHA PARTE ★</div>
+                    <div style="font-size:0.85rem;color:#e0f2fe;margin-top:5px;">Exibe · Edita qtd · Remove · Limpa · Calcula total</div>
+                </div>
+
+                <!-- seta ↓ com label -->
+                <div style="text-align:center;line-height:1.3;">
+                    <div style="font-size:1.4rem;color:#94a3b8;">↓</div>
+                    <span style="font-size:0.8rem;color:#94a3b8;">botão "Finalizar Compra"</span>
+                </div>
+
+                <!-- checkout flow -->
+                <div style="background:#064e3b;border:1px solid #6ee7b7;border-radius:12px;padding:11px 14px;text-align:center;width:100%;">
+                    <div style="font-size:1.0rem;font-weight:700;color:#86efac;margin-bottom:3px;">✅ Fluxo de Checkout — Estella</div>
+                    <div style="font-size:0.82rem;color:#a7f3d0;line-height:1.7;">
+                        checkout.html → entrega.html<br>→ pagamento.html → revisao.html<br>→ confirmacao.html
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SETA ↔ direita -->
+            <div style="text-align:center;font-size:1.8rem;color:#475569;line-height:1;">↔</div>
+
+            <!-- DIREITA: localStorage -->
+            <div style="background:#064e3b;border:2px solid #6ee7b7;border-radius:14px;padding:14px;text-align:center;">
+                <div style="font-size:1.15rem;font-weight:700;color:#6ee7b7;margin-bottom:8px;">💾 localStorage</div>
+                <div style="font-size:0.95rem;color:#a7f3d0;line-height:1.8;">
+                    Chave:<br>
+                    <code style="font-size:0.85rem;color:#fbbf24;">petcare_carrinho</code><br>
+                    <hr style="border-color:#065f46;margin:6px 0;">
+                    <code style="font-size:0.8rem;">getList()</code> → lê tudo<br>
+                    <code style="font-size:0.8rem;">addToList()</code> → add produto<br>
+                    <code style="font-size:0.8rem;">updateInList()</code> → edita qtd<br>
+                    <code style="font-size:0.8rem;">removeFromList()</code> → remove 1<br>
+                    <code style="font-size:0.8rem;">remove()</code> → limpa tudo
+                </div>
+            </div>
+
+        </div>
+
+        <p style="margin-top:8px;font-size:0.85rem;color:#475569;text-align:right;font-style:italic;">
+            📅 agendamento.html — fluxo independente · 🔐 auth/login.html — Guilherme (28/05) · 🐾 banho.html · hotel.html · veterinario.html — Nicolle (28/05)
+        </p>
+    </div>
+
+</div><!-- fim #area-slide -->
+
+
+<!-- ════════════════════════════════════════════════════════════
+     MODO TELEPROMPTER
+     ════════════════════════════════════════════════════════════ -->
+<div id="area-teleprompter">
+
+    <!-- Vínculo: visão geral dos 4 arquivos -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Introdução</div>
+        <div class="tp-titulo">Minha parte no projeto</div>
+        <div class="tp-texto">
+            Minha responsabilidade foram quatro arquivos.
+            O <strong>carrinho.html</strong>, que é a página do carrinho de compras.
+            O <strong>css/carrinho.css</strong>, com todo o layout e estilo visual da página.
+            O <strong>js/storage.js</strong>, que é o módulo compartilhado de CRUD no localStorage usado por todo o grupo.
+            E o <strong>js/main.js</strong>, que injeta o header e footer automaticamente em todas as páginas,
+            atualiza o badge de quantidade no ícone do carrinho e exibe notificações na tela.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 19, 26, 47–82, 105–106 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">carrinho.html — Estrutura</div>
+        <div class="tp-titulo">Estrutura HTML da página <span class="tp-ref">linhas 19, 26, 80, 105</span></div>
+        <div class="tp-texto">
+            A página carrega dois arquivos CSS em ordem específica.
+            Primeiro o <strong>styles.css</strong> do grupo, depois o <strong>carrinho.css</strong> específico desta página —
+            assim o carrinho pode sobrescrever estilos globais quando necessário.
+            O HTML tem um banner page-hero com o título e um contador de produtos atualizado pelo JavaScript.
+            A div <strong>conteudo-carrinho</strong> começa completamente vazia no HTML —
+            o JavaScript monta todo o conteúdo dinamicamente.
+            A ordem dos scripts também é obrigatória: storage.js primeiro, depois main.js, e só então nosso código,
+            porque o carrinho usa funções que só existem depois que esses arquivos carregam.
+        </div>
+    </div>
+
+    <!-- Vínculo: css/carrinho.css linhas 14–36 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">css/carrinho.css — Layout</div>
+        <div class="tp-titulo">Grid responsivo do carrinho <span class="tp-ref">linhas 14–36</span></div>
+        <div class="tp-texto">
+            O layout usa CSS Grid. No mobile, que é o padrão, temos uma coluna única
+            com a lista de produtos em cima.
+            No desktop, acima de mil e vinte e quatro pixels, o grid passa para duas frações para os produtos
+            e uma fração para o resumo do pedido, usando a propriedade grid-template-columns.
+            O elemento main tem altura mínima de sessenta por cento da viewport
+            para empurrar o footer para baixo mesmo quando o carrinho está vazio.
+        </div>
+    </div>
+
+    <!-- Vínculo: css/carrinho.css linhas 78–315 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">css/carrinho.css — Cards</div>
+        <div class="tp-titulo">Estilos dos cards e controles <span class="tp-ref">linhas 78–315</span></div>
+        <div class="tp-texto">
+            O card de produto faz um override do padding global de vinte e quatro para dezesseis pixels,
+            deixando os cards mais compactos.
+            A imagem do produto usa object-fit cover para não distorcer em nenhuma tela.
+            O botão menos fica com opacidade de zero ponto quatro e cursor not-allowed quando desabilitado —
+            o JavaScript insere o atributo disabled e o CSS cuida da aparência.
+            O card de resumo do pedido tem position sticky com top de oitenta pixels,
+            considerando o header de sessenta e quatro pixels mais uma folga,
+            para o resumo acompanhar o scroll da lista de produtos.
+        </div>
+    </div>
+
+    <!-- Vínculo: js/storage.js linhas 7–78 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">js/storage.js — Módulo IIFE</div>
+        <div class="tp-titulo">O módulo Storage e o padrão IIFE <span class="tp-ref">linhas 7–78</span></div>
+        <div class="tp-texto">
+            O storage.js usa um padrão chamado IIFE — uma função que se executa imediatamente
+            e retorna apenas a API pública, protegendo as funções internas.
+            As operações básicas são <strong>get</strong> para ler, <strong>set</strong> para salvar serializado em JSON,
+            <strong>remove</strong> para apagar uma chave e <strong>clear</strong> para apagar tudo.
+            Tem também uma função privada <strong>_parse</strong> com try e catch que converte a string JSON
+            de volta para objeto sem travar a aplicação se o valor estiver corrompido.
+        </div>
+    </div>
+
+    <!-- Vínculo: js/storage.js linhas 41–74 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">js/storage.js — Helpers de Lista</div>
+        <div class="tp-titulo">Operações sobre arrays no localStorage <span class="tp-ref">linhas 41–74</span></div>
+        <div class="tp-texto">
+            O <strong>getList</strong> retorna o array ou array vazio se a chave não existir, nunca null.
+            O <strong>addToList</strong> gera um ID automático usando Date.now se o item não tiver um.
+            O <strong>updateInList</strong> usa findIndex para localizar o item e o spread operator
+            para mesclar só os campos que mudaram, sem perder os outros dados.
+            O <strong>removeFromList</strong> usa filter para criar um novo array sem o item removido.
+            E o <strong>findInList</strong> retorna o item pelo ID ou null se não encontrar.
+        </div>
+    </div>
+
+    <!-- Vínculo: js/main.js linhas 6–91 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">js/main.js — Header e Footer</div>
+        <div class="tp-titulo">Injeção automática de header e footer <span class="tp-ref">linhas 6–91</span></div>
+        <div class="tp-texto">
+            O main.js escuta o evento <strong>DOMContentLoaded</strong> que dispara assim que o HTML
+            é processado, sem precisar esperar as imagens.
+            A função <strong>injectHeader</strong> cria o elemento header com logo, menu de navegação
+            e ícone do carrinho usando createElement, innerHTML e body.prepend.
+            A função <strong>injectFooter</strong> cria o footer com grid de quatro colunas,
+            incluindo o ano atual gerado automaticamente com new Date().getFullYear.
+            A função <strong>highlightActiveNav</strong> lê o nome da página atual na URL
+            e adiciona a classe active ao link correspondente no menu.
+        </div>
+    </div>
+
+    <!-- Vínculo: js/main.js linhas 94–120 e carrinho.html linhas 482, 507 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">js/main.js — Badge e Toast</div>
+        <div class="tp-titulo">Contador do carrinho e notificações <span class="tp-ref">linhas 94–120</span></div>
+        <div class="tp-texto">
+            A função <strong>updateCartBadge</strong> lê o localStorage, soma as quantidades com reduce
+            e atualiza o número no ícone do carrinho no header, exibindo ou escondendo o badge.
+            A função <strong>mostrarToast</strong> exibe uma notificação no topo da tela por três segundos
+            usando classList e setTimeout para remover depois.
+            O carrinho chama mostrarToast depois de remover um produto ou limpar o carrinho,
+            confirmando a ação para o usuário.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 128–316 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Critério: Árvore DOM</div>
+        <div class="tp-titulo">Manipulação do DOM no carrinho <span class="tp-ref">linhas 128, 173, 316</span></div>
+        <div class="tp-texto">
+            O addEventListener load garante que o script só executa depois que a página inteira carregou.
+            Com <strong>getElementById</strong> selecionamos os elementos pelo ID.
+            Com <strong>textContent</strong> atualizamos o texto do contador de produtos no banner.
+            Com <strong>innerHTML</strong> inserimos o HTML completo dos produtos na div vazia.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 155–317 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Carrinho — Função Principal</div>
+        <div class="tp-titulo">renderizarCarrinho — a função que controla tudo <span class="tp-ref">linhas 155–317</span></div>
+        <div class="tp-texto">
+            Esta função é chamada toda vez que algo muda.
+            Lê o array do localStorage, atualiza o contador no banner com if else if e else.
+            Se o carrinho estiver vazio, exibe o card de aviso e para a execução com return.
+            Se tiver produtos, calcula subtotal com reduce, aplica frete com operador ternário —
+            grátis acima de duzentos reais —, monta o HTML com forEach e insere via innerHTML.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 258–384 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Aula 6 — forEach / Template Literal</div>
+        <div class="tp-titulo">forEach e o card de cada produto <span class="tp-ref">linhas 258–404</span></div>
+        <div class="tp-texto">
+            Para cada produto o forEach chama montarHtmlProduto, que usa template literal —
+            crases com cifrão e chaves para inserir variáveis dentro do HTML sem concatenar com o operador mais.
+            O botão menos fica desabilitado quando a quantidade é um,
+            usando operador ternário que insere o atributo disabled ou uma string vazia.
+            A função auxiliar <strong>resolveImg</strong> corrige automaticamente o caminho das imagens,
+            adicionando o prefixo <strong>../</strong> quando necessário, pois o carrinho agora fica
+            dentro da subpasta checkout e os caminhos relativos precisam subir um nível.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 412–417 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Aula 6 — reduce()</div>
+        <div class="tp-titulo">calcularSubtotal com reduce <span class="tp-ref">linhas 412–417</span></div>
+        <div class="tp-texto">
+            O reduce percorre o array acumulando um resultado numérico, começando em zero.
+            Para cada produto soma preço vezes quantidade no acumulador e retorna o total.
+        </div>
+    </div>
+
+    <!-- Vínculo: carrinho.html linhas 441–509 -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Aula 6/7 — Math.max, confirm, localStorage</div>
+        <div class="tp-titulo">Alterar, remover e limpar <span class="tp-ref">linhas 441–509</span></div>
+        <div class="tp-texto">
+            O <strong>Math.max de 1 e a nova quantidade</strong> garante que nunca vá abaixo de um.
+            O <strong>confirm</strong> exibe caixa nativa OK e Cancelar antes de remover ou limpar,
+            evitando ação acidental.
+            O removeFromList remove um produto pelo ID.
+            O Storage.remove apaga a chave inteira — mais eficiente do que remover item por item.
+            Em ambos os casos o mostrarToast do main.js confirma a ação com notificação verde.
+        </div>
+    </div>
+
+    <!-- Encerramento -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Conclusão</div>
+        <div class="tp-titulo">Resumo dos meus quatro arquivos</div>
+        <div class="tp-texto">
+            O storage.js fornece o módulo de persistência para todo o grupo usando o padrão IIFE.
+            O main.js garante que header, footer, badge e notificações funcionem em todas as páginas.
+            O carrinho.css define o grid responsivo, os cards e o resumo sticky.
+            E o carrinho.html une tudo usando DOM dinâmico, localStorage, forEach, reduce,
+            operador ternário, Math.max e confirm.
+        </div>
+    </div>
+
+    <!-- Vínculo: fluxo geral do projeto -->
+    <div class="tp-bloco">
+        <div class="tp-tag">Fluxo do Projeto</div>
+        <div class="tp-titulo">Como as páginas se conectam ao carrinho</div>
+        <div class="tp-texto">
+            O Guilherme criou o catálogo de produtos padrão diretamente no <strong>storage.js</strong>,
+            com seis produtos que são carregados automaticamente no localStorage na primeira visita.
+            Na página inicial, <strong>index.html</strong>, e também em <strong>produtos/produtos.html</strong>,
+            quando o cliente clica em Comprar a função <strong>addCart</strong> é chamada.
+            Essa função usa o <strong>Storage.getList</strong>, <strong>Storage.updateInList</strong>
+            e <strong>Storage.addToList</strong> do storage.js — que é minha responsabilidade —
+            para gravar o produto no localStorage.
+            Ela também chama <strong>updateCartBadge</strong> e <strong>mostrarToast</strong>
+            do main.js — que também é minha responsabilidade.
+            O <strong>carrinho</strong>, que é minha parte central, lê esse localStorage,
+            exibe os produtos, permite editar quantidades, remover itens individuais e limpar tudo de uma vez.
+            Quando o cliente decide finalizar, o botão leva para o fluxo de checkout criado pela Estella:
+            checkout, entrega, pagamento, revisão e confirmação do pedido.
+            O <strong>agendamento.html</strong> tem fluxo completamente independente
+            e não interage com o carrinho.
+            A Nicolle também entregou as páginas de serviços: <strong>banho.html</strong>,
+            <strong>hotel.html</strong> e <strong>veterinario.html</strong> —
+            os links do footer do main.js foram ativados apontando para essas páginas.
+        </div>
+    </div>
+
+</div><!-- fim #area-teleprompter -->
+
+<script>
+    /* ── SLIDES ───────────────────────────────────────────────── */
+    const TOTAL_SLIDES = 17;
+    let slideAtual = 1;
+
+    function navegar(direcao) {
+        const proximo = slideAtual + direcao;
+        if (proximo < 1 || proximo > TOTAL_SLIDES) return;
+        document.getElementById('slide-' + slideAtual).classList.remove('ativo');
+        slideAtual = proximo;
+        document.getElementById('slide-' + slideAtual).classList.add('ativo');
+        document.getElementById('progresso').textContent = 'Slide ' + slideAtual + ' / ' + TOTAL_SLIDES;
+        document.getElementById('barra-progresso').style.width = (slideAtual / TOTAL_SLIDES * 100) + '%';
+        document.getElementById('btn-anterior').disabled = (slideAtual === 1);
+        document.getElementById('btn-proximo').disabled  = (slideAtual === TOTAL_SLIDES);
+    }
+
+    document.getElementById('btn-anterior').disabled = true;
+    document.getElementById('barra-progresso').style.width = (1 / TOTAL_SLIDES * 100) + '%';
+
+    /* ── TELEPROMPTER ─────────────────────────────────────────── */
+    let tpRodando   = false;
+    let tpAnimId    = null;
+    let tpVelocidade = 3;
+    let tpAcum      = 0;   /* acumulador de pixels fracionários */
+
+    function alternarTeleprompter() {
+        pausarTP();
+        document.body.classList.toggle('teleprompter');
+        const ativo = document.body.classList.contains('teleprompter');
+        document.getElementById('btn-tp').textContent = ativo ? '← Voltar aos Slides' : '📜 Teleprompter';
+        document.getElementById('tp-inline').style.display = ativo ? 'flex' : 'none';
+        if (ativo) {
+            window.scrollTo({ top: 0 });
+            document.getElementById('btn-play').textContent = '▶ Iniciar';
+        }
+    }
+
+    function togglePlay() {
+        tpRodando ? pausarTP() : iniciarTP();
+    }
+
+    function iniciarTP() {
+        tpRodando = true;
+        tpAcum = 0;
+        document.getElementById('btn-play').textContent = '⏸ Pausar';
+        rodarTP();
+    }
+
+    function pausarTP() {
+        tpRodando = false;
+        if (tpAnimId) { cancelAnimationFrame(tpAnimId); tpAnimId = null; }
+        const btn = document.getElementById('btn-play');
+        if (btn) btn.textContent = '▶ Continuar';
+    }
+
+    function rodarTP() {
+        if (!tpRodando) return;
+        /* velocidade: pixels por segundo = tpVelocidade * 3  (range ~3–30 px/s) */
+        tpAcum += (tpVelocidade * 3) / 60;
+        if (tpAcum >= 1) {
+            const px = Math.floor(tpAcum);
+            window.scrollBy(0, px);
+            tpAcum -= px;
+        }
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight - 4) {
+            pausarTP();
+            return;
+        }
+        tpAnimId = requestAnimationFrame(rodarTP);
+    }
+
+    function ajustarVelocidade(val) {
+        tpVelocidade = parseInt(val);
+        document.getElementById('tp-vel-valor').textContent = val;
+    }
+
+    /* Scroll manual pelos botões ▲▼ do controle flutuante */
+    function scrollManual(px) {
+        pausarTP();
+        window.scrollBy({ top: px, behavior: 'smooth' });
+    }
+
+    /* Clique em qualquer lugar do conteúdo → pausa / retoma */
+    document.getElementById('area-teleprompter').addEventListener('click', function (e) {
+        /* ignora cliques que vieram de dentro do controle flutuante */
+        if (e.target.closest('#tp-controle')) return;
+        if (!document.body.classList.contains('teleprompter')) return;
+        togglePlay();
+    });
+
+    /* Teclado ─────────────────────────────────────────────────── */
+    document.addEventListener('keydown', function (e) {
+        if (document.body.classList.contains('teleprompter')) {
+            if (e.key === 'ArrowDown') { e.preventDefault(); scrollManual(120); }
+            if (e.key === 'ArrowUp')   { e.preventDefault(); scrollManual(-120); }
+            if (e.key === ' ')         { e.preventDefault(); togglePlay(); }
+            return;
+        }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navegar(1); }
+        if (e.key === 'ArrowLeft')                   { e.preventDefault(); navegar(-1); }
+    });
+
+    /* ── BADGES CLICÁVEIS → ABRE VS CODE NA LINHA CERTA ─────── */
+    const _BASE = 'C:/Users/ovroc/OneDrive/%C3%81rea%20de%20Trabalho/SENAC%202%C2%BA%20Semestre/Arquivos%20Materias%20do%20Curso/PW%20Programa%C3%A7%C3%A3o%20Web/Atividade%20para%20entrega/Trabalho%20site/';
+    const _ARQ = {
+        'carrinho.html': _BASE + 'carrinho%20vers%C3%A3o%20Comentada.html',
+        'carrinho.css':  _BASE + 'css/carrinho.css',
+        'storage.js':    _BASE + 'Projeto%20Github%20C%C3%B3pia/js/storage.js',
+        'main.js':       _BASE + 'Projeto%20Github%20C%C3%B3pia/js/main.js',
+    };
+
+    document.querySelectorAll('[data-vscode]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const parts = this.dataset.vscode.split(':');
+            window.location.href = 'vscode://file/' + _ARQ[parts[0]] + ':' + parts[1];
+        });
+    });
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhe do Produto — PetCare</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    main {
+      background: var(--bg-page);
+      padding: 48px 0;
+      min-height: 60vh;
+    }
+
+    .produto-detalhe {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .produto-imagem img {
+      width: 100%;
+      border-radius: 20px;
+      object-fit: cover;
+    }
+
+    .produto-info h1 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .produto-preco {
+      font-size: 32px;
+      color: var(--green-dark);
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .produto-descricao {
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin: 20px 0;
+      padding: 20px 0;
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .produto-descricao h3 {
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .produto-caracteristicas {
+      margin: 20px 0;
+    }
+
+    .produto-caracteristicas h3 {
+      margin-bottom: 12px;
+    }
+
+    .produto-caracteristicas ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .produto-caracteristicas li {
+      padding: 8px 0;
+      color: var(--gray-600);
+    }
+
+    .categoria-badge {
+      display: inline-block;
+      background: var(--gray-100);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .btn-comprar {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .btn-voltar {
+      margin-top: 16px;
+    }
+
+    .loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px;
+      color: var(--gray-400);
+    }
+
+    .error {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px;
+    }
+
+    @media (max-width: 768px) {
+      .produto-detalhe {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header injetado pelo main.js -->
+
+  <!-- BANNER -->
+  <section class="page-hero">
+    <div class="container">
+      <p class="breadcrumb"><a href="../index.html">Início</a> / <a href="produtos.html">Produtos</a> / Detalhe</p>
+      <h1 id="produto-nome">Detalhe do Produto</h1>
+      <p id="produto-subtitle">Informações completas sobre o produto</p>
+    </div>
+  </section>
+
+  <!-- CONTEÚDO -->
+  <main>
+    <div class="container">
+      <div id="produto-detalhe" class="produto-detalhe">
+        <div class="loading">
+          <div class="icone">🐾</div>
+          <p>Carregando informações do produto...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    function resolveImg(src) {
+      if (!src) return '../images/produto1.png';
+      if (src.startsWith('http') || src.startsWith('../') || src.startsWith('/')) return src;
+      return '../' + src;
+    }
+
+    // Pega o ID do produto da URL
+    function getProdutoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return parseInt(urlParams.get('id'));
+    }
+
+    // Carrega e exibe o produto
+    function carregarProduto() {
+      const produtoId = getProdutoId();
+      const produtos = Storage.getList('petcare_produtos');
+      const produto = produtos.find(p => p.id === produtoId);
+
+      const container = document.getElementById('produto-detalhe');
+      const tituloPagina = document.getElementById('produto-nome');
+      const subtituloPagina = document.getElementById('produto-subtitle');
+
+      // Se produto não existe
+      if (!produto) {
+        tituloPagina.textContent = 'Produto não encontrado';
+        subtituloPagina.textContent = 'Verifique se o produto existe';
+        container.innerHTML = `
+          <div class="error">
+            <div class="icone" style="font-size: 64px;">😢</div>
+            <h2>Produto não encontrado</h2>
+            <p>O produto que você está procurando não existe ou foi removido.</p>
+            <button class="btn primary" onclick="location.href='produtos.html'">
+              Ver todos os produtos
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Atualizar título da página
+      tituloPagina.textContent = produto.nome;
+      subtituloPagina.textContent = 'Confira todos os detalhes do produto';
+
+      // Mapeamento de categorias
+      const categorias = {
+        'alimentacao': '🥣 Alimentação',
+        'brinquedos': '🎾 Brinquedos',
+        'acessorios': '🎀 Acessórios',
+        'higiene': '🛁 Higiene',
+        'saude': '💊 Saúde'
+      };
+
+      const precoFormatado = Number(produto.preco).toFixed(2).replace('.', ',');
+      const badge = categorias[produto.cat] || produto.cat;
+      const imagemSrc = resolveImg(produto.img);
+
+      // Renderizar produto
+      container.innerHTML = `
+        <div class="produto-imagem">
+          <img src="${imagemSrc}" alt="${produto.nome}" 
+               onerror="this.src='../images/produto1.png'">
+        </div>
+
+        <div class="produto-info">
+          <span class="categoria-badge">${badge}</span>
+          <h1>${produto.nome}</h1>
+
+          <div class="produto-preco">
+            R$ ${precoFormatado}
+          </div>
+
+          <div class="produto-descricao">
+            <h3>📖 Descrição do produto</h3>
+            <p>${produto.descricao || 'Sem descrição disponível para este produto.'}</p>
+          </div>
+
+          <div class="produto-caracteristicas">
+            <h3>✨ Características</h3>
+            <ul>
+              <li>✅ Produto de alta qualidade</li>
+              <li>✅ Garantia de satisfação</li>
+              <li>✅ Entrega rápida para todo Brasil</li>
+              <li>✅ Atendimento especializado</li>
+            </ul>
+          </div>
+
+          <button class="btn primary btn-comprar" onclick="adicionarAoCarrinho(${produto.id})">
+            🛒 Adicionar ao carrinho - R$ ${precoFormatado}
+          </button>
+
+          <button class="btn outline btn-voltar" onclick="location.href='produtos.html'">
+            ← Voltar para produtos
+          </button>
+        </div>
+      `;
+    }
+
+    // Função para adicionar ao carrinho
+    function adicionarAoCarrinho(id) {
+      const produto = Storage.findInList('petcare_produtos', id);
+      if (!produto) return;
+
+      const carrinho = Storage.getList('petcare_carrinho');
+      const exist = carrinho.find(i => i.id === id);
+
+      if (exist) {
+        Storage.updateInList('petcare_carrinho', id, { qtd: (exist.qtd || 1) + 1 });
+      } else {
+        Storage.addToList('petcare_carrinho', {
+          id: produto.id,
+          nome: produto.nome,
+          preco: produto.preco,
+          img: produto.img,
+          qtd: 1
+        });
+      }
+
+      updateCartBadge();
+      mostrarToast(`✅ "${produto.nome}" adicionado ao carrinho!`, 'success');
+    }
+
+    // Carregar o produto quando a página abrir
+    carregarProduto();
+  </script>
+</body>
+
+</html>

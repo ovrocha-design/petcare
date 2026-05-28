@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras — PetCare</title>
+
+    <!--
+    ════════════════════════════════════════════════════════════════
+    CSS GLOBAL DO PROJETO (styles.css)
+    ════════════════════════════════════════════════════════════════
+    Este arquivo é compartilhado por todas as páginas do grupo.
+    Ele define:
+      - Variáveis de cor: --blue, --green, --gray-900, etc.
+      - Classes globais: .card, .btn, .page-hero, .container, etc.
+      - Header e footer (injetados via main.js)
+    Regra: NÃO editar este arquivo sozinha — somente via Pull Request.
+    -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!--
+    CSS específico desta página — criado pelo Integrante 3.
+    Carregado depois do styles.css, pode sobrescrever estilos globais.
+    Todo o conteúdo deste arquivo está documentado em css/carrinho.css.
+    O caminho usa "../" porque o arquivo agora fica dentro de checkout/.
+    -->
+    <link rel="stylesheet" href="../css/carrinho.css">
+</head>
+<body>
+
+    <!--
+    ════════════════════════════════════════════════════════════════
+    HEADER — injetado automaticamente pelo main.js
+    ════════════════════════════════════════════════════════════════
+    Não precisa copiar o header aqui. O main.js detecta todas as
+    páginas e insere o menu de navegação no início do <body>.
+    -->
+
+
+    <!--
+    ════════════════════════════════════════════════════════════════
+    BANNER DA PÁGINA (.page-hero)
+    ════════════════════════════════════════════════════════════════
+    Seção com fundo gradiente azul→verde (padrão do Figma).
+    A classe .page-hero vem do styles.css global.
+    Dentro: breadcrumb, título e contador de produtos (atualizado via JS).
+    -->
+    <section class="page-hero">
+        <div class="container">
+
+            <!-- Breadcrumb: mostra o caminho de navegação -->
+            <p class="breadcrumb">
+                <a href="../index.html">Início</a> / Carrinho
+            </p>
+
+            <h1>🛒 Carrinho de Compras</h1>
+
+            <!--
+            id="contador-produtos":
+            O JavaScript atualiza o texto deste parágrafo com a
+            quantidade de itens. Ex: "3 produtos no seu carrinho".
+            Começa com "Carregando..." até o JS executar.
+            -->
+            <p id="contador-produtos">Carregando...</p>
+
+        </div>
+    </section>
+
+
+    <!--
+    ════════════════════════════════════════════════════════════════
+    CONTEÚDO PRINCIPAL
+    ════════════════════════════════════════════════════════════════
+    A div #conteudo-carrinho começa completamente vazia.
+    O JavaScript monta todo o HTML interno aqui dinamicamente:
+      - Se carrinho vazio: exibe mensagem + link para produtos
+      - Se tem produtos: exibe grid com lista + resumo do pedido
+    -->
+    <main>
+        <div class="container">
+            <div id="conteudo-carrinho"></div>
+        </div>
+    </main>
+
+
+    <!--
+    FOOTER — injetado automaticamente pelo main.js
+    -->
+
+
+    <!--
+    ════════════════════════════════════════════════════════════════
+    SCRIPTS — ordem obrigatória (sempre esta sequência!)
+    ════════════════════════════════════════════════════════════════
+    1. storage.js → carrega o objeto global "Storage" com todos os
+       métodos de CRUD para o localStorage
+    2. main.js    → injeta header e footer, atualiza o badge do
+       carrinho no menu e disponibiliza a função mostrarToast()
+    3. <script>   → nosso código JavaScript específico do carrinho
+
+    Por que essa ordem importa?
+    Nosso código usa Storage e mostrarToast — essas funções só
+    existem depois que storage.js e main.js carregam.
+    ════════════════════════════════════════════════════════════════
+    -->
+    <script src="../js/storage.js"></script>
+    <script src="../js/main.js"></script>
+
+    <script>
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 1 — INICIALIZAÇÃO DA PÁGINA
+        📌 Slide 2: Estrutura HTML da página  (ordem dos scripts)
+        📌 Slide 9: Manipulação do DOM        (addEventListener 'load')
+        ════════════════════════════════════════════════════════════════
+        Conceito da Aula 7: addEventListener
+
+        addEventListener(evento, função) registra uma função para ser
+        executada quando determinado evento acontece no navegador.
+
+        O evento 'load' dispara quando a página terminou de carregar
+        completamente: HTML, scripts e imagens.
+
+        Por que usar 'load' e não chamar direto?
+        Se chamássemos renderizarCarrinho() fora do evento, o script
+        poderia rodar antes de storage.js ou main.js estarem prontos,
+        causando erros como "Storage is not defined".
+        ════════════════════════════════════════════════════════════════
+        */
+        window.addEventListener('load', function () {
+            renderizarCarrinho();
+        });
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 2 — FUNÇÃO renderizarCarrinho()
+        📌 Slide  9: Manipulação do DOM        (getElementById, innerHTML)
+        📌 Slide 10: Como o carrinho usa o Storage (getList)
+        📌 Slide 11: renderizarCarrinho()      (função principal completa)
+        ════════════════════════════════════════════════════════════════
+        Conceitos da Aula 6: const, let, template literals,
+                             forEach com arrow function,
+                             operador ternário, if / else if / else
+        Conceitos da Aula 7: localStorage via Storage,
+                             innerHTML para atualizar o DOM
+
+        Esta é a função principal do carrinho.
+        Ela é chamada toda vez que algo muda (ao carregar a página,
+        ao alterar quantidade, ao remover produto ou ao limpar).
+
+        Fluxo de execução:
+          1. Lê o array de produtos do localStorage
+          2. Atualiza o contador no banner
+          3. Se vazio → exibe mensagem e sai (return)
+          4. Se tem produtos → calcula valores e monta o HTML
+          5. Insere o HTML na div #conteudo-carrinho
+        ════════════════════════════════════════════════════════════════
+        */
+        function renderizarCarrinho() {
+
+            /*
+            Aula 7 — localStorage:
+            Storage.getList('petcare_carrinho') busca o array de produtos
+            salvos no localStorage do navegador.
+            Retorna [] (array vazio) se a chave não existir — nunca null.
+
+            O array tem objetos com esta estrutura:
+            { id: 1, nome: "Ração Premium", preco: 89.90, img: "images/p1.png", qtd: 2 }
+            */
+            const carrinho = Storage.getList('petcare_carrinho');
+
+            /*
+            Aula 7 — getElementById:
+            Seleciona elementos HTML pelo atributo id.
+            Retorna a referência ao elemento para podermos modificá-lo.
+            */
+            const conteudo = document.getElementById('conteudo-carrinho');
+            const contador = document.getElementById('contador-produtos');
+
+            /*
+            Aula 6 — if / else if / else:
+            Testa condições em sequência. Apenas o primeiro bloco
+            verdadeiro executa.
+
+            carrinho.length → número de itens no array
+              0 → "Seu carrinho está vazio"
+              1 → "1 produto no seu carrinho"
+             2+ → "N produtos no seu carrinho" (template literal)
+
+            Aula 6 — template literal:
+            Usa crases (`) em vez de aspas. Permite inserir variáveis
+            com ${variável} dentro do texto, sem precisar concatenar (+).
+            */
+            if (carrinho.length === 0) {
+                contador.textContent = 'Seu carrinho está vazio';
+            } else if (carrinho.length === 1) {
+                contador.textContent = '1 produto no seu carrinho';
+            } else {
+                contador.textContent = `${carrinho.length} produtos no seu carrinho`;
+            }
+
+            /*
+            Estado vazio:
+            Se não há produtos, exibe o card de "carrinho vazio" com
+            um link para a página de produtos.
+            O "return" encerra a função aqui — o código abaixo não executa.
+            */
+            if (carrinho.length === 0) {
+                conteudo.innerHTML = `
+                    <div class="card carrinho-vazio">
+                        <div class="icone-vazio">🛒</div>
+                        <h2 class="vazio-titulo">Seu carrinho está vazio</h2>
+                        <p class="vazio-texto">Adicione produtos para começar suas compras</p>
+                        <a href="../produtos/produtos.html" class="btn btn-primary btn-primary-centered">Ver Produtos</a>
+                    </div>`;
+                return;
+            }
+
+            /*
+            Aula 6 — operador ternário:
+            Sintaxe: condição ? valor_se_verdadeiro : valor_se_falso
+
+            subtotal >= 200 ? 0 : 15.90
+              Se subtotal for maior ou igual a 200 → frete = 0 (grátis)
+              Caso contrário                        → frete = R$ 15,90
+            */
+            const subtotal = calcularSubtotal(carrinho);
+            const frete    = subtotal >= 200 ? 0 : 15.90;
+            const total    = subtotal + frete;
+
+            /*
+            Montagem do HTML:
+            Começamos com uma string vazia (let html = '...')
+            e vamos adicionando pedaços de HTML com +=.
+            Ao final, inserimos tudo na página de uma vez com innerHTML.
+
+            Por que let e não const?
+            Usamos let porque o valor de html vai mudar (+=).
+            const não permite reatribuição.
+            */
+            let html = '<div class="carrinho-grid">';
+
+            /* ── COLUNA 1: lista de produtos ──────────────────────── */
+            html += '<div>';
+            html += '<div class="cabecalho-produtos">';
+            html += `<h2 class="titulo-secao">Produtos (${carrinho.length})</h2>`;
+            html += '<button class="btn-limpar" onclick="limparCarrinho()">🗑️ Limpar carrinho</button>';
+            html += '</div>';
+
+            /*
+            Aula 6 — forEach com arrow function:
+
+            array.forEach(item => { ... })
+            Percorre cada elemento do array e executa a função para ele.
+
+            "produto =>" é a arrow function.
+            Recebe o produto atual e chama montarHtmlProduto() que
+            retorna o HTML do card daquele produto.
+
+            Equivalente ao "for" clássico, porém mais moderno e legível.
+            */
+            carrinho.forEach(produto => {
+                html += montarHtmlProduto(produto);
+            });
+
+            html += '</div>'; /* fecha coluna 1 */
+
+            /* ── COLUNA 2: resumo do pedido ─────────────────────── */
+            html += '<div><div class="resumo-card">';
+            html += '<h2 class="resumo-titulo">Resumo do Pedido</h2>';
+
+            /*
+            toFixed(2) → formata o número com exatamente 2 casas decimais.
+            Exemplo: 89.9 → "89.90"  |  100 → "100.00"
+            */
+            html += `<div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <span class="valor-destaque">R$ ${subtotal.toFixed(2)}</span>
+                     </div>`;
+
+            /*
+            Operador ternário para exibir o frete:
+            Se frete === 0 → exibe "GRÁTIS" em verde
+            Se frete > 0  → exibe o valor formatado
+            */
+            html += '<div class="resumo-linha"><span>Frete</span>';
+            html += frete === 0
+                ? '<span class="frete-gratis">GRÁTIS</span>'
+                : `<span class="valor-destaque">R$ ${frete.toFixed(2)}</span>`;
+            html += '</div>';
+
+            /* Alerta: quanto falta para atingir frete grátis */
+            if (subtotal < 200) {
+                const faltam = (200 - subtotal).toFixed(2);
+                html += `<div class="alerta-frete">
+                            💡 Faltam <strong>R$ ${faltam}</strong> para frete grátis!
+                         </div>`;
+            }
+
+            html += `<div class="resumo-linha-total">
+                        <span class="resumo-total-label">Total</span>
+                        <span class="resumo-total-valor">R$ ${total.toFixed(2)}</span>
+                     </div>`;
+
+            /*
+            Links para as próximas ações do usuário:
+            "Finalizar Compra" → vai para checkout.html (Integrante 4)
+            "Continuar Comprando" → volta para produtos.html (Integrante 2)
+            */
+            html += '<a href="checkout.html" class="btn btn-primary">Finalizar Compra</a>';
+            html += '<a href="../produtos/produtos.html" class="btn btn-outline">Continuar Comprando</a>';
+
+            html += '</div></div></div>'; /* fecha resumo-card, col2 e grid */
+
+            /*
+            Aula 7 — innerHTML:
+            Atribui o HTML montado como conteúdo interno da div.
+            O navegador processa a string e cria os elementos na tela.
+            */
+            conteudo.innerHTML = html;
+        }
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 3 — FUNÇÃO montarHtmlProduto(produto)
+        📌 Slide 12: forEach + montarHtmlProduto()  (template literal, ternário disabled)
+        ════════════════════════════════════════════════════════════════
+        Conceito da Aula 6: template literal de múltiplas linhas,
+                            operador ternário dentro do template
+
+        Recebe um único objeto do carrinho e retorna o HTML do seu card.
+
+        Objeto recebido (exemplo):
+          { id: 3, nome: "Petisco", preco: 25.00, img: "images/p3.png", qtd: 2 }
+
+        Template literal de múltiplas linhas:
+          - Usa crases (`) para abrir e fechar
+          - Pode ocupar várias linhas sem precisar de '\n' ou '+'
+          - Insere variáveis com ${expressão}
+
+        Ternário no botão −:
+          ${produto.qtd <= 1 ? 'disabled' : ''}
+          Se qtd = 1 → insere o atributo "disabled" (botão bloqueado)
+          Se qtd > 1 → insere '' (nada), botão fica habilitado
+        ════════════════════════════════════════════════════════════════
+        */
+        /*
+        ════════════════════════════════════════════════════════════════
+        FUNÇÃO AUXILIAR — resolveImg(src)
+        📌 Slide 12: forEach + montarHtmlProduto()  (caminhos de imagem)
+        ════════════════════════════════════════════════════════════════
+        Como o carrinho.html agora fica dentro de checkout/, os caminhos
+        de imagem que antes eram "images/produto1.png" (relativo à raiz)
+        precisam virar "../images/produto1.png".
+
+        Esta função garante que qualquer caminho funcione corretamente:
+          - Se não há src → usa imagem padrão
+          - Se já começa com http, "../" ou "/" → usa como está
+          - Caso contrário → adiciona "../" na frente
+        ════════════════════════════════════════════════════════════════
+        */
+        function resolveImg(src) {
+            if (!src) return '../images/produto1.png';
+            if (src.startsWith('http') || src.startsWith('../') || src.startsWith('/')) return src;
+            return '../' + src;
+        }
+
+        function montarHtmlProduto(produto) {
+
+            /* Calcula o subtotal deste produto individualmente */
+            const subtotalProduto = produto.preco * produto.qtd;
+
+            return `
+                <div class="card">
+                    <div class="produto-item">
+
+                        <img src="${resolveImg(produto.img)}" alt="${produto.nome}" class="produto-img">
+
+                        <div class="produto-info">
+                            <h3 class="produto-nome">${produto.nome}</h3>
+                            <p class="produto-preco">R$ ${produto.preco.toFixed(2)}</p>
+
+                            <div class="qtd-controls">
+                                <span>Quantidade:</span>
+                                <div class="qtd-box">
+
+                                    <!-- Botão −: disabled quando qtd já é 1 (mínimo) -->
+                                    <button class="btn-qtd"
+                                            onclick="alterarQuantidade(${produto.id}, -1)"
+                                            ${produto.qtd <= 1 ? 'disabled' : ''}>−</button>
+
+                                    <span class="qtd-valor">${produto.qtd}</span>
+
+                                    <button class="btn-qtd"
+                                            onclick="alterarQuantidade(${produto.id}, 1)">+</button>
+                                </div>
+
+                                <span class="subtotal-item">
+                                    Subtotal: <span class="valor-destaque">R$ ${subtotalProduto.toFixed(2)}</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <button class="btn-remover"
+                                onclick="removerProduto(${produto.id})"
+                                title="Remover produto">×</button>
+                    </div>
+                </div>`;
+        }
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 4 — FUNÇÃO calcularSubtotal(carrinho)
+        📌 Slide 13: calcularSubtotal() — método reduce
+        ════════════════════════════════════════════════════════════════
+        Conceito da Aula 6: método reduce() com arrow function
+
+        reduce() percorre o array acumulando um resultado.
+        Sintaxe:
+          array.reduce((acumulador, itemAtual) => expressão, valorInicial)
+
+          acumulador  → guarda o resultado parcial a cada rodada
+          itemAtual   → o produto da rodada atual
+          valorInicial → 0 (o acumulador começa em zero)
+
+        Exemplo com 3 produtos:
+          Produto A: R$50,00 × 2 = R$100,00
+          Produto B: R$30,00 × 1 = R$30,00
+          Produto C: R$20,00 × 3 = R$60,00
+
+          Rodada 1: acumulador = 0 + 100,00 = 100,00
+          Rodada 2: acumulador = 100,00 + 30,00 = 130,00
+          Rodada 3: acumulador = 130,00 + 60,00 = 190,00
+          Resultado retornado: 190,00
+        ════════════════════════════════════════════════════════════════
+        */
+        function calcularSubtotal(carrinho) {
+            return carrinho.reduce(
+                (acumulador, item) => acumulador + (item.preco * item.qtd),
+                0
+            );
+        }
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 5 — FUNÇÃO alterarQuantidade(idProduto, delta)
+        📌 Slide 10: Como o carrinho usa o Storage  (updateInList)
+        📌 Slide 14: alterarQuantidade(id, delta)   (Math.max, find)
+        ════════════════════════════════════════════════════════════════
+        Conceitos da Aula 6: find via Storage.findInList,
+                             Math.max() para valor mínimo, const
+
+        Parâmetros:
+          idProduto → ID do produto a ser alterado (ex: 1629384720000)
+          delta     → quanto alterar: +1 (aumentar) ou -1 (diminuir)
+
+        Math.max(a, b) → retorna o maior valor entre a e b.
+        Math.max(1, novaQtd) garante que a quantidade nunca fique
+        abaixo de 1 (quantidade mínima de 1 unidade).
+
+        Exemplo:
+          Produto com qtd = 1, usuário clica −
+          novaQtd = Math.max(1, 1 + (-1)) = Math.max(1, 0) = 1
+          (não deixa ir para zero)
+        ════════════════════════════════════════════════════════════════
+        */
+        function alterarQuantidade(idProduto, delta) {
+
+            /*
+            Aula 6 — find (via Storage.findInList):
+            Busca o primeiro item do array cujo id corresponde ao idProduto.
+            Retorna o objeto produto ou null se não encontrar.
+            */
+            const item = Storage.findInList('petcare_carrinho', idProduto);
+            if (!item) return; /* segurança: se não achar o produto, para aqui */
+
+            /* Calcula a nova quantidade com o mínimo de 1 */
+            const novaQtd = Math.max(1, item.qtd + delta);
+
+            /* Aula 7 — localStorage: salva a quantidade atualizada */
+            Storage.updateInList('petcare_carrinho', idProduto, { qtd: novaQtd });
+
+            /* Redesenha a página com os dados atualizados */
+            renderizarCarrinho();
+        }
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 6 — FUNÇÃO removerProduto(idProduto)
+        📌 Slide 10: Como o carrinho usa o Storage  (removeFromList)
+        📌 Slide 15: removerProduto() e limparCarrinho()
+        ════════════════════════════════════════════════════════════════
+        Conceito da Aula 6: window.confirm()
+        Conceito da Aula 7: localStorage via Storage
+
+        confirm() abre uma caixa de diálogo nativa do navegador
+        com dois botões: OK e Cancelar.
+          OK     → retorna true  → executa a remoção
+          Cancelar → retorna false → não faz nada
+
+        Isso evita remoções acidentais com um clique sem querer.
+        ════════════════════════════════════════════════════════════════
+        */
+        function removerProduto(idProduto) {
+            if (confirm('Deseja realmente remover este produto do carrinho?')) {
+                Storage.removeFromList('petcare_carrinho', idProduto);
+                renderizarCarrinho();
+                /* mostrarToast() vem do main.js — exibe notificação verde no topo */
+                mostrarToast('Produto removido do carrinho', 'success');
+            }
+        }
+
+
+        /*
+        ════════════════════════════════════════════════════════════════
+        BLOCO 7 — FUNÇÃO limparCarrinho()
+        📌 Slide 10: Como o carrinho usa o Storage  (Storage.remove)
+        📌 Slide 15: removerProduto() e limparCarrinho()
+        ════════════════════════════════════════════════════════════════
+        Conceito da Aula 6: window.confirm()
+        Conceito da Aula 7: localStorage via Storage
+
+        Remove TODOS os produtos de uma só vez apagando a chave
+        inteira do localStorage (não item por item).
+
+        Diferença entre os métodos do Storage:
+          Storage.removeFromList(chave, id) → remove UM item pelo id
+          Storage.remove(chave)             → apaga a chave inteira
+                                              (todos os itens somem)
+        ════════════════════════════════════════════════════════════════
+        */
+        function limparCarrinho() {
+            if (confirm('Deseja realmente limpar todo o carrinho?')) {
+                Storage.remove('petcare_carrinho'); /* apaga a chave inteira */
+                renderizarCarrinho();
+                mostrarToast('Carrinho limpo com sucesso', 'success');
+            }
+        }
+
+    </script>
+</body>
+</html>

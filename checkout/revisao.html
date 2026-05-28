@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare - Revisão</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="revisao.css">
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header class="topo">
+        <div class="topo-conteudo">
+            <div class="logo">
+                <span class="logo-icon">🐾</span>
+                <h2>PetCare</h2>
+            </div>
+            <p><i class="fa-solid fa-lock" style="font-size:12px;"></i> Checkout seguro</p>
+        </div>
+    </header>
+
+    <!-- Passos -->
+    <section class="passos">
+        <div class="passo concluido">
+            <span>✓</span>
+            <p>Identificação</p>
+        </div>
+        <div class="linha concluida"></div>
+        <div class="passo concluido">
+            <span>✓</span>
+            <p>Entrega</p>
+        </div>
+        <div class="linha concluida"></div>
+        <div class="passo concluido">
+            <span>✓</span>
+            <p>Pagamento</p>
+        </div>
+        <div class="linha concluida"></div>
+        <div class="passo ativo">
+            <span>4</span>
+            <p>Revisão</p>
+        </div>
+    </section>
+
+    <main class="container-checkout">
+
+        <section class="formulario">
+            <h2>Revisar pedido</h2>
+
+            <div class="revisao-itens">
+                <div class="revisao-item">
+                    <i class="fa-solid fa-check"></i>
+                    <p><strong>Entrega:</strong> <span id="info-entrega">Carregando...</span></p>
+                </div>
+                <div class="revisao-item">
+                    <i class="fa-solid fa-check"></i>
+                    <p><strong>Pagamento:</strong> <span id="info-pagamento">Carregando...</span></p>
+                </div>
+            </div>
+
+            <div class="botoes-fluxo">
+                <a href="pagamento.html" class="btn-voltar">
+                    <i class="fa-solid fa-chevron-left"></i> Voltar
+                </a>
+                <button class="btn-confirmar" onclick="confirmarPedido()">
+                    <i class="fa-solid fa-check"></i> Confirmar Pedido
+                </button>
+            </div>
+        </section>
+
+        <!-- Resumo -->
+        <aside class="resumo">
+            <h2>Resumo</h2>
+            <div class="linha-resumo">
+                <span>Subtotal</span>
+                <span>R$ 0,00</span>
+            </div>
+            <div class="linha-resumo">
+                <span>Frete</span>
+                <span>R$ 19,90</span>
+            </div>
+            <div class="linha-resumo total">
+                <span>Total</span>
+                <span class="preco-total">R$ 19,90</span>
+            </div>
+            <small>Dados protegidos por criptografia SSL.</small>
+        </aside>
+
+    </main>
+
+    <script src="revisao.js"></script>
+
+</body>
+</html>
