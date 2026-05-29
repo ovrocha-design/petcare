@@ -76,6 +76,8 @@ const Storage = (() => {
   return { get, set, remove, clear, getList, addToList, updateInList, removeFromList, findInList };
 
 })();
+/* Lista de produtos iniciais carregados no localStorage na primeira vez
+   que o site é acessado, caso ainda não exista nenhum produto salvo. */
 const PRODUTOS_PADRAO = [
   {
     id: 1,
@@ -127,6 +129,8 @@ const PRODUTOS_PADRAO = [
   }
 ];
 
+/* Verifica se o localStorage já tem produtos. Se estiver vazio,
+   carrega a lista padrão acima para o site ter conteúdo desde o primeiro acesso. */
 function initProdutosPadrao() {
   const KEY_PRODUTOS = 'petcare_produtos';
   const produtosExistentes = Storage.getList(KEY_PRODUTOS);

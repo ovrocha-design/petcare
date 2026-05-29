@@ -3,11 +3,15 @@
    Injeta header e footer. Alterar somente via Pull Request.
    ============================================================ */
 
+/* Detecta se a página está em subpasta e define o prefixo de caminho (_BASE)
+   para que todos os links funcionem tanto na raiz quanto em subpastas. */
 const _pathParts = window.location.pathname.replace(/\\/g, '/').split('/');
 const _parentDir = _pathParts[_pathParts.length - 2] || '';
 const _SUBDIRS = ['produtos', 'auth', 'checkout', 'admin'];
 const _BASE = _SUBDIRS.includes(_parentDir) ? '../' : '';
 
+/* Ponto de entrada: executa ao carregar a página e inicializa
+   header, footer, navegação ativa, badge do carrinho e toast. */
 document.addEventListener('DOMContentLoaded', () => {
   injectHeader();
   injectFooter();
@@ -17,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ── HEADER ── */
+/* Cria e insere o header no topo da página.
+   Adapta os botões de acordo com o estado do usuário
+   (visitante, logado ou admin). */
 function injectHeader() {
   const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
   const isAdmin = usuarioLogado && usuarioLogado.isAdmin;
@@ -59,6 +66,8 @@ function injectHeader() {
   document.body.prepend(header);
 
   /* ── MENU MOBILE ── */
+  /* Cria o painel lateral de navegação para celular e o overlay escuro ao fundo.
+     Clicar no overlay fecha o menu. */
   const mobileNav = document.createElement('div');
   mobileNav.id = 'mobile-nav';
   mobileNav.className = 'mobile-nav';
@@ -88,6 +97,8 @@ function injectHeader() {
   document.body.appendChild(mobileOverlay);
 }
 
+/* Alterna a abertura do menu mobile. Trava a rolagem da página enquanto
+   o menu está aberto. O parâmetro force permite forçar abrir (true) ou fechar (false). */
 function toggleMobileNav(force) {
   const nav     = document.getElementById('mobile-nav');
   const overlay = document.getElementById('mobile-nav-overlay');
@@ -98,12 +109,15 @@ function toggleMobileNav(force) {
   document.body.style.overflow = abrir ? 'hidden' : '';
 }
 
+/* Remove a sessão do usuário do localStorage e redireciona para a página inicial. */
 function logout() {
   localStorage.removeItem('usuarioLogado');
   location.href = _BASE + 'index.html';
 }
 
 /* ── FOOTER ── */
+/* Cria e insere o rodapé no final da página com links de serviços,
+   navegação, contato e ano atual gerado automaticamente. */
 function injectFooter() {
   const footer = document.createElement('footer');
   footer.id = 'site-footer';
@@ -144,6 +158,8 @@ function injectFooter() {
 }
 
 /* ── NAV ATIVO ── */
+/* Compara a URL atual com os links do menu e adiciona a classe
+   'active' no link correspondente à página aberta. */
 function highlightActiveNav() {
   const page = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('#site-header .main-nav a').forEach(link => {
@@ -152,6 +168,8 @@ function highlightActiveNav() {
 }
 
 /* ── BADGE CARRINHO ── */
+/* Lê o carrinho do localStorage, soma as quantidades e exibe
+   o total no ícone do carrinho. Oculta o badge se estiver vazio. */
 function updateCartBadge() {
   const badge = document.getElementById('cart-badge');
   if (!badge) return;
@@ -162,6 +180,7 @@ function updateCartBadge() {
 }
 
 /* ── TOAST ── */
+/* Cria o elemento de notificação (toast) uma única vez na página. */
 function createToastEl() {
   if (document.getElementById('toast-el')) return;
   const el = document.createElement('div');
@@ -170,6 +189,8 @@ function createToastEl() {
   document.body.append(el);
 }
 
+/* Exibe uma mensagem de notificação por 3 segundos.
+   O parâmetro tipo define a cor: 'info', 'success' ou 'error'. */
 function mostrarToast(msg, tipo = 'info') {
   const el = document.getElementById('toast-el');
   if (!el) return;
