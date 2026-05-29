@@ -8,27 +8,29 @@
 
 
 /* ── LAYOUT DA PÁGINA ──────────────────────────────────────────
-   Define a área principal de conteúdo: cor de fundo, espaçamento
-   vertical e altura mínima para empurrar o footer para baixo.
+   Define a área principal de conteúdo (área entre o banner e o rodapé,
+   onde os produtos aparecem): cor de fundo, espaçamento vertical e
+   altura mínima para empurrar o footer para baixo.
    ─────────────────────────────────────────────────────────── */
 main {
-    background: var(--gray-50);
-    padding: 48px 0;
-    min-height: 60vh;
+    background: var(--gray-50);  /* cor de fundo: cinza clarinho — área entre o banner e o rodapé */
+    padding: 48px 0;             /* espaçamento de 48px em cima e embaixo, 0 nas laterais */
+    min-height: 60vh;            /* altura mínima de 60% da tela — evita o rodapé subir quando o carrinho está vazio */
 }
 
 
 /* ── GRID DO CARRINHO ──────────────────────────────────────────
-   Layout responsivo:
+   Layout responsivo (se adapta ao tamanho da tela — funciona bem
+   tanto no celular quanto no computador):
    - Mobile (padrão): coluna única, lista de produtos em cima
    - Desktop (≥ 1024 px): 2/3 lista de produtos | 1/3 resumo do pedido
    ─────────────────────────────────────────────────────────── */
-.carrinho-grid {
+.carrinho-grid { /* classe aplicada no JavaScript — divide a tela em colunas: no mobile fica em 1 coluna, no desktop em 2 colunas (produtos à esquerda, resumo à direita) */
     display: grid;
     grid-template-columns: 1fr;
     gap: 32px;
 }
-
+/* Se a largura da tela for 1024px ou maior, aplique este estilo. */
 @media (min-width: 1024px) {
     .carrinho-grid {
         grid-template-columns: 2fr 1fr;
@@ -41,33 +43,33 @@ main {
    "Limpar carrinho" à direita.
    ─────────────────────────────────────────────────────────── */
 .cabecalho-produtos {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    display: flex;                      /* coloca o título e o botão lado a lado na mesma linha */
+    justify-content: space-between;     /* título vai para a esquerda, botão vai para a direita */
+    align-items: center;                /* alinha os dois verticalmente ao centro da linha */
+    margin-bottom: 16px;                /* espaço abaixo do cabeçalho antes da lista de produtos */
 }
 
 /* Título "Produtos (N)" */
 .titulo-secao {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--gray-900);
+    font-size: 20px;        /* tamanho médio-grande — hierarquia visual de seção */
+    font-weight: 600;       /* semibold — mais pesado que texto normal, mais leve que título de página */
+    color: var(--gray-900); /* quase preto — máximo contraste sobre o fundo cinza-claro */
 }
 
 /* Botão vermelho discreto para limpar todos os itens */
 .btn-limpar {
-    background: none;
-    border: none;
-    color: #DC2626;
-    cursor: pointer;
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    font-family: var(--font);
+    background: none;               /* remove o fundo padrão do navegador para <button> */
+    border: none;                   /* remove a borda padrão do navegador para <button> */
+    color: #DC2626;                 /* vermelho — sinaliza ação destrutiva */
+    cursor: pointer;                /* muda o cursor para mãozinha ao passar em cima */
+    padding: 8px 16px;              /* aumenta a área clicável além do texto */
+    border-radius: var(--radius-sm); /* cantos levemente arredondados */
+    font-size: 14px;                /* menor que o título — hierarquia secundária */
+    font-family: var(--font);       /* garante a mesma fonte do restante do site */
 }
 
 .btn-limpar:hover {
-    background: #FEE2E2;
+    background: #FEE2E2; /* rosa bem claro (red-100) — feedback de hover sem agredir */
 }
 
 
@@ -116,7 +118,9 @@ main {
     margin-bottom: 12px;
 }
 
-
+/* São os elementos que permitem o usuário aumentar ou diminuir a quantidade
+   de um produto no carrinho.  */
+   
 /* ── CONTROLES DE QUANTIDADE ───────────────────────────────────
    Linha com: label "Quantidade:" | caixinha +/- | subtotal do item
    ─────────────────────────────────────────────────────────── */
@@ -356,12 +360,12 @@ main {
 
 /* Valor em negrito (subtotais individuais e de linha) */
 .valor-destaque {
-    font-weight: 600;
-    color: var(--gray-900);
+    font-weight: 600;       /* semibold — destaca o número sem usar cor */
+    color: var(--gray-900); /* quase preto — máximo contraste */
 }
 
 /* Texto verde para indicar frete grátis */
 .frete-gratis {
-    color: var(--green-mid);
-    font-weight: 600;
+    color: var(--green-mid); /* verde — reforço visual positivo para o usuário */
+    font-weight: 600;        /* semibold — destaca o "Grátis" na linha do frete */
 }
